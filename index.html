@@ -91,6 +91,8 @@
             position: absolute;
             top: 10px;
             left: 10px;
+            width: 100px;
+            text-align: left;
         }
         #restart-button {
             display: none;
@@ -136,6 +138,7 @@
             }
             #score {
                 font-size: 20px;
+                width: 80px;
             }
             #restart-button {
                 font-size: 20px;
@@ -181,6 +184,7 @@
         const backgroundMusic = document.getElementById('background-music');
         const playPauseBtn = document.getElementById('play-pause-btn');
         const backToLandingBtn = document.getElementById('back-to-landing');
+        let emojiIntervals = []; // Array to hold intervals for stopping emojis
 
         // Play/Pause functionality
         playPauseBtn.addEventListener('click', function() {
@@ -212,7 +216,7 @@
 
             const score = document.createElement('div');
             score.id = 'score';
-            score.textContent = 'Score: 0';
+            score.textContent = 'Score: 000';
             body.appendChild(score);
 
             const gun = document.createElement('div');
@@ -233,6 +237,11 @@
             const emojis = ['😹', '🌽', '🤡🫵', '💉🧬', '🇹🇼', '🌎☮️', '🥩', '🐸', '️‍🔥', '🎲', '🇺🇸', '🥨', '🍆', '🍣', '🇨🇳', '🥧', '🌮', '💩', '👽', '🍉', '🍑', '🚀', '💀'];
             let currentScore = 0;
 
+            function updateScoreDisplay() {
+                const paddedScore = currentScore.toString().padStart(3, '0');
+                score.textContent = `Score: ${paddedScore}`;
+            }
+
             function getAngle(mouseX, mouseY) {
                 const rect = gun.getBoundingClientRect();
                 const gunX = rect.left + rect.width / 2;
@@ -248,13 +257,16 @@
                 emoji.style.left = Math.random() * 90 + '%';
                 gameArea.appendChild(emoji);
 
-                setTimeout(() => {
+                const emojiInterval = setTimeout(() => {
                     if (emoji.parentNode) {
                         gameArea.removeChild(emoji);
                     }
                 }, 10000); // Matches the fall animation duration
 
-                setTimeout(createFallingEmoji, Math.random() * 1000 + 500);
+                emojiIntervals.push(emojiInterval);
+
+                const creationInterval = setTimeout(createFallingEmoji, Math.random() * 1000 + 500);
+                emojiIntervals.push(creationInterval);
             }
 
             function shootEmoji(event) {
@@ -272,7 +284,7 @@
                     emoji.remove();
 
                     currentScore++;
-                    score.textContent = 'Score: ' + currentScore;
+                    updateScoreDisplay();
 
                     setTimeout(() => {
                         if (heart.parentNode) {
@@ -293,10 +305,14 @@
             }
 
             function endGame() {
+                // Stop all emoji intervals
+                emojiIntervals.forEach(interval => clearInterval(interval));
+                emojiIntervals = [];
+
                 alert('omg wow! ur love gunned down ' + currentScore + ' emojis!');
                 gameArea.innerHTML = '';
                 currentScore = 0;
-                score.textContent = 'Score: 0';
+                updateScoreDisplay();
                 document.removeEventListener('mousemove', moveGun);
                 document.removeEventListener('click', shootEmoji);
                 restartButton.style.display = 'block';
@@ -318,6 +334,10 @@
         }
 
         function goToLandingPage() {
+            // Stop all emoji intervals
+            emojiIntervals.forEach(interval => clearInterval(interval));
+            emojiIntervals = [];
+
             document.getElementById('landing-page').style.display = 'block'; // Show the landing page
             document.getElementById('game').remove(); // Remove the game elements
             document.getElementById('score').remove();
