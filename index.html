@@ -15,9 +15,11 @@
             justify-content: center;
             align-items: center;
             font-family: Arial, sans-serif;
+            overflow: hidden;
         }
         #landing-page, #game-page {
             text-align: center;
+            width: 100%;
         }
         #header {
             font-size: 48px;
@@ -108,6 +110,7 @@
             background-color: #ff85c2;
         }
         #back-to-landing {
+            display: none;
             position: fixed;
             bottom: 10px;
             right: 10px;
@@ -122,6 +125,35 @@
         #back-to-landing:hover {
             background-color: #ff85c2;
         }
+
+        /* Mobile Optimization */
+        @media screen and (max-width: 768px) {
+            .gun {
+                font-size: 36px;
+            }
+            .falling-emoji, .heart {
+                font-size: 28px;
+            }
+            #score {
+                font-size: 20px;
+            }
+            #restart-button {
+                font-size: 20px;
+                padding: 8px 16px;
+            }
+            button {
+                font-size: 20px;
+                padding: 8px 16px;
+            }
+            #audio-controls button {
+                font-size: 14px;
+                padding: 8px;
+            }
+            #back-to-landing {
+                font-size: 14px;
+                padding: 8px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -134,7 +166,7 @@
     </div>
 
     <div id="audio-controls">
-        <button id="play-pause-btn">play/pause</button>
+        <button id="play-pause-btn">Play/Pause Music</button>
     </div>
 
     <audio id="background-music" src="NIGHTCORE Love Gun.mp3" loop autoplay></audio>
@@ -144,6 +176,7 @@
     <script>
         const backgroundMusic = document.getElementById('background-music');
         const playPauseBtn = document.getElementById('play-pause-btn');
+        const backToLandingBtn = document.getElementById('back-to-landing');
 
         // Play/Pause functionality
         playPauseBtn.addEventListener('click', function() {
@@ -159,6 +192,7 @@
         // Function to start the game
         function startGame() {
             document.getElementById('landing-page').style.display = 'none'; // Hide the landing page
+            backToLandingBtn.style.display = 'block'; // Show the "Back to Landing Page" button
             initializeGame(); // Initialize the game setup
         }
 
@@ -250,7 +284,6 @@
             }
 
             function endGame() {
-                backgroundMusic.pause(); // Stop the music
                 alert('omg wow! ur love gunned down ' + currentScore + ' emojis!');
                 gameArea.innerHTML = '';
                 currentScore = 0;
@@ -277,6 +310,7 @@
             document.getElementById('score').remove();
             document.querySelector('.gun').remove();
             document.getElementById('restart-button').remove();
+            backToLandingBtn.style.display = 'none'; // Hide the "Back to Landing Page" button
         }
     </script>
 </body>
