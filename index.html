@@ -90,6 +90,38 @@
             top: 10px;
             left: 10px;
         }
+        #restart-button {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            padding: 10px 20px;
+            cursor: pointer;
+            border: none;
+            border-radius: 10px;
+            background-color: #ff69b4;
+            color: white;
+        }
+        #restart-button:hover {
+            background-color: #ff85c2;
+        }
+        #back-to-landing {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 16px;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #ff69b4;
+            color: white;
+            cursor: pointer;
+        }
+        #back-to-landing:hover {
+            background-color: #ff85c2;
+        }
     </style>
 </head>
 <body>
@@ -106,6 +138,8 @@
     </div>
 
     <audio id="background-music" src="NIGHTCORE Love Gun.mp3" loop autoplay></audio>
+
+    <button id="back-to-landing" onclick="goToLandingPage()">Back to Landing Page</button>
 
     <script>
         const backgroundMusic = document.getElementById('background-music');
@@ -133,35 +167,25 @@
             body.style.cursor = "url('crosshair.png') 16 16, crosshair"; // Set custom cursor for game
             body.style.backgroundColor = "#ff69b4"; // Keep the pink background
 
-            // Add the score and gun elements
             const score = document.createElement('div');
             score.id = 'score';
             score.textContent = 'Score: 0';
-            score.style.fontSize = '24px';
-            score.style.margin = '10px';
-            score.style.position = 'absolute';
-            score.style.top = '10px';
-            score.style.left = '10px';
             body.appendChild(score);
 
             const gun = document.createElement('div');
             gun.className = 'gun';
             gun.textContent = '▄︻デ══‐一';
-            gun.style.fontSize = '48px';
-            gun.style.position = 'absolute';
-            gun.style.left = '50%';
-            gun.style.bottom = '80px';
-            gun.style.transform = 'translateX(-50%) rotate(0deg)';
-            gun.style.transformOrigin = 'center bottom';
             body.appendChild(gun);
 
             const gameArea = document.createElement('div');
             gameArea.id = 'game';
-            gameArea.style.width = '100%';
-            gameArea.style.height = '100vh';
-            gameArea.style.position = 'relative';
-            gameArea.style.cursor = 'inherit';
             body.appendChild(gameArea);
+
+            const restartButton = document.createElement('button');
+            restartButton.id = 'restart-button';
+            restartButton.textContent = 'Play Again';
+            restartButton.onclick = restartGame;
+            body.appendChild(restartButton);
 
             const emojis = ['😹', '🌽', '🤡🫵', '💉🧬', '🇹🇼', '🌎☮️', '🥩', '🐸', '️‍🔥', '🎲', '🇺🇸', '🥨', '🍆', '🍣', '🇨🇳', '🥧', '🌮', '💩', '👽', '🍉', '🍑', '🚀', '💀'];
             let currentScore = 0;
@@ -179,19 +203,14 @@
                 emoji.classList.add('falling-emoji');
                 emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
                 emoji.style.left = Math.random() * 90 + '%';
-                emoji.style.position = 'absolute';
-                emoji.style.fontSize = '36px';
-                emoji.style.animation = 'fall 10s linear infinite';
                 gameArea.appendChild(emoji);
 
-                // Make the emoji disappear after 10 seconds (duration of the fall animation)
                 setTimeout(() => {
                     if (emoji.parentNode) {
                         gameArea.removeChild(emoji);
                     }
                 }, 10000); // Matches the fall animation duration
 
-                // Repeat the creation process
                 setTimeout(createFallingEmoji, Math.random() * 1000 + 500);
             }
 
@@ -205,18 +224,13 @@
                     heart.textContent = '♡';
                     heart.style.left = rect.left + 'px';
                     heart.style.top = rect.top + 'px';
-                    heart.style.position = 'absolute';
-                    heart.style.fontSize = '36px';
                     gameArea.appendChild(heart);
 
-                    // Remove the original emoji
                     emoji.remove();
 
-                    // Increment score
                     currentScore++;
                     score.textContent = 'Score: ' + currentScore;
 
-                    // Remove heart after a short time
                     setTimeout(() => {
                         if (heart.parentNode) {
                             gameArea.removeChild(heart);
@@ -232,7 +246,7 @@
 
             function startFallingEmojis() {
                 createFallingEmoji(); // Start generating falling emojis
-                setTimeout(endGame, 30000); // Game duration: 30 seconds
+                setTimeout(endGame, 90000); // Game duration: 1.5 minutes (90 seconds)
             }
 
             function endGame() {
@@ -243,11 +257,26 @@
                 score.textContent = 'Score: 0';
                 document.removeEventListener('mousemove', moveGun);
                 document.removeEventListener('click', shootEmoji);
+                restartButton.style.display = 'block';
+            }
+
+            function restartGame() {
+                gameArea.innerHTML = ''; // Clear the game area
+                restartButton.style.display = 'none'; // Hide the restart button
+                startGame(); // Start a new game
             }
 
             document.addEventListener('mousemove', moveGun);
             document.addEventListener('click', shootEmoji);
             startFallingEmojis();
+        }
+
+        function goToLandingPage() {
+            document.getElementById('landing-page').style.display = 'block'; // Show the landing page
+            document.getElementById('game').remove(); // Remove the game elements
+            document.getElementById('score').remove();
+            document.querySelector('.gun').remove();
+            document.getElementById('restart-button').remove();
         }
     </script>
 </body>
