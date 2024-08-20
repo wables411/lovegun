@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love Gun</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #ff69b4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+        #landing-page, #game-page {
+            text-align: center;
+        }
+        #header {
+            font-size: 48px;
+            color: white;
+            margin-bottom: 20px;
+        }
+        button {
+            font-size: 24px;
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
+            border: none;
+            border-radius: 10px;
+            background-color: #ff69b4;
+            color: white;
+            width: 200px;
+        }
+        button:hover {
+            background-color: #ff85c2;
+        }
+        #audio-controls {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            z-index: 1000;
+        }
+        #audio-controls button {
+            font-size: 16px;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #ff69b4;
+            color: white;
+            cursor: pointer;
+        }
+        #audio-controls button:hover {
+            background-color: #ff85c2;
+        }
+        #game {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            cursor: inherit;
+        }
+        .falling-emoji {
+            font-size: 36px;
+            position: absolute;
+            animation: fall 10s linear infinite;
+        }
+        @keyframes fall {
+            from { top: -50px; }
+            to { top: 100%; }
+        }
+        .heart {
+            font-size: 36px;
+            position: absolute;
+        }
+        .gun {
+            font-size: 48px;
+            position: absolute;
+            left: 50%;
+            bottom: 80px;
+            transform: translateX(-50%) rotate(0deg);
+            transform-origin: center bottom;
+        }
+        #score {
+            font-size: 24px;
+            margin: 10px;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="landing-page">
+        <div id="header">▄︻デ══━一♡</div>
+        <button onclick="window.open('https://unicorn.meme/memoji', '_blank')">UwU</button><br>
+        <button onclick="window.open('https://x.com/lovegunUWU', '_blank')">Twitter</button><br>
+        <button onclick="window.open('https://t.me/+zBD163zDwIVjOWRk', '_blank')">Telegram</button><br>
+        <button onclick="startGame()">pew pew</button>
+    </div>
+
+    <div id="audio-controls">
+        <button id="play-pause-btn">play/pause</button>
+    </div>
+
+    <audio id="background-music" src="NIGHTCORE Love Gun.mp3" loop autoplay></audio>
+
+    <script>
+        const backgroundMusic = document.getElementById('background-music');
+        const playPauseBtn = document.getElementById('play-pause-btn');
+
+        // Play/Pause functionality
+        playPauseBtn.addEventListener('click', function() {
+            if (backgroundMusic.paused) {
+                backgroundMusic.play();
+                playPauseBtn.textContent = 'Pause Music';
+            } else {
+                backgroundMusic.pause();
+                playPauseBtn.textContent = 'Play Music';
+            }
+        });
+
+        // Function to start the game
+        function startGame() {
+            document.getElementById('landing-page').style.display = 'none'; // Hide the landing page
+            initializeGame(); // Initialize the game setup
+        }
+
+        function initializeGame() {
+            const body = document.body;
+            body.style.cursor = "url('crosshair.png') 16 16, crosshair"; // Set custom cursor for game
+            body.style.backgroundColor = "#ff69b4"; // Keep the pink background
+
+            // Add the score and gun elements
+            const score = document.createElement('div');
+            score.id = 'score';
+            score.textContent = 'Score: 0';
+            score.style.fontSize = '24px';
+            score.style.margin = '10px';
+            score.style.position = 'absolute';
+            score.style.top = '10px';
+            score.style.left = '10px';
+            body.appendChild(score);
+
+            const gun = document.createElement('div');
+            gun.className = 'gun';
+            gun.textContent = '▄︻デ══‐一';
+            gun.style.fontSize = '48px';
+            gun.style.position = 'absolute';
+            gun.style.left = '50%';
+            gun.style.bottom = '80px';
+            gun.style.transform = 'translateX(-50%) rotate(0deg)';
+            gun.style.transformOrigin = 'center bottom';
+            body.appendChild(gun);
+
+            const gameArea = document.createElement('div');
+            gameArea.id = 'game';
+            gameArea.style.width = '100%';
+            gameArea.style.height = '100vh';
+            gameArea.style.position = 'relative';
+            gameArea.style.cursor = 'inherit';
+            body.appendChild(gameArea);
+
+            const emojis = ['😹', '🌽', '🤡🫵', '💉🧬', '🇹🇼', '🌎☮️', '🥩', '🐸', '️‍🔥', '🎲', '🇺🇸', '🥨', '🍆', '🍣', '🇨🇳', '🥧', '🌮', '💩', '👽', '🍉', '🍑', '🚀', '💀'];
+            let currentScore = 0;
+
+            function getAngle(mouseX, mouseY) {
+                const rect = gun.getBoundingClientRect();
+                const gunX = rect.left + rect.width / 2;
+                const gunY = rect.top + rect.height / 2;
+                const angle = Math.atan2(mouseY - gunY, mouseX - gunX) * (180 / Math.PI);
+                return angle;
+            }
+
+            function createFallingEmoji() {
+                const emoji = document.createElement('div');
+                emoji.classList.add('falling-emoji');
+                emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                emoji.style.left = Math.random() * 90 + '%';
+                emoji.style.position = 'absolute';
+                emoji.style.fontSize = '36px';
+                emoji.style.animation = 'fall 10s linear infinite';
+                gameArea.appendChild(emoji);
+
+                // Make the emoji disappear after 10 seconds (duration of the fall animation)
+                setTimeout(() => {
+                    if (emoji.parentNode) {
+                        gameArea.removeChild(emoji);
+                    }
+                }, 10000); // Matches the fall animation duration
+
+                // Repeat the creation process
+                setTimeout(createFallingEmoji, Math.random() * 1000 + 500);
+            }
+
+            function shootEmoji(event) {
+                const emoji = document.elementFromPoint(event.clientX, event.clientY);
+
+                if (emoji && emoji.classList.contains('falling-emoji')) {
+                    const rect = emoji.getBoundingClientRect();
+                    const heart = document.createElement('div');
+                    heart.classList.add('heart');
+                    heart.textContent = '♡';
+                    heart.style.left = rect.left + 'px';
+                    heart.style.top = rect.top + 'px';
+                    heart.style.position = 'absolute';
+                    heart.style.fontSize = '36px';
+                    gameArea.appendChild(heart);
+
+                    // Remove the original emoji
+                    emoji.remove();
+
+                    // Increment score
+                    currentScore++;
+                    score.textContent = 'Score: ' + currentScore;
+
+                    // Remove heart after a short time
+                    setTimeout(() => {
+                        if (heart.parentNode) {
+                            gameArea.removeChild(heart);
+                        }
+                    }, 1000);
+                }
+            }
+
+            function moveGun(event) {
+                const angle = getAngle(event.clientX, event.clientY);
+                gun.style.transform = `translateX(-50%) rotate(${angle}deg)`;
+            }
+
+            function startFallingEmojis() {
+                createFallingEmoji(); // Start generating falling emojis
+                setTimeout(endGame, 30000); // Game duration: 30 seconds
+            }
+
+            function endGame() {
+                backgroundMusic.pause(); // Stop the music
+                alert('omg wow! ur love gunned down ' + currentScore + ' emojis!');
+                gameArea.innerHTML = '';
+                currentScore = 0;
+                score.textContent = 'Score: 0';
+                document.removeEventListener('mousemove', moveGun);
+                document.removeEventListener('click', shootEmoji);
+            }
+
+            document.addEventListener('mousemove', moveGun);
+            document.addEventListener('click', shootEmoji);
+            startFallingEmojis();
+        }
+    </script>
+</body>
+</html>
