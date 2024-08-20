@@ -111,7 +111,7 @@
         #restart-button:hover {
             background-color: #ff85c2;
         }
-        #back-to-landing {
+        #home-button {
             display: none;
             position: fixed;
             bottom: 10px;
@@ -124,7 +124,7 @@
             color: white;
             cursor: pointer;
         }
-        #back-to-landing:hover {
+        #home-button:hover {
             background-color: #ff85c2;
         }
 
@@ -152,7 +152,7 @@
                 font-size: 14px;
                 padding: 8px;
             }
-            #back-to-landing {
+            #home-button {
                 font-size: 14px;
                 padding: 8px;
             }
@@ -162,10 +162,10 @@
 <body>
     <div id="landing-page">
         <div id="header">▄︻デ══━一♡</div>
-        <button onclick="showGameStartPage()">pew pew</button>
         <button onclick="window.open('https://unicorn.meme/memoji', '_blank')">UwU</button><br>
+        <button onclick="showGameStartPage()">pew pew</button><br>
         <button onclick="window.open('https://x.com/lovegunUWU', '_blank')">Twitter</button><br>
-        <button onclick="window.open('https://t.me/+zBD163zDwIVjOWRk', '_blank')">Telegram</button><br>
+        <button onclick="window.open('https://t.me/+zBD163zDwIVjOWRk', '_blank')">Telegram</button>
     </div>
 
     <div id="audio-controls">
@@ -178,12 +178,12 @@
         <button onclick="startGame()">Start Game</button>
     </div>
 
-    <button id="back-to-landing" onclick="goToLandingPage()">Back to Landing Page</button>
+    <button id="home-button" onclick="goToLandingPage()">Home</button>
 
     <script>
         const backgroundMusic = document.getElementById('background-music');
         const playPauseBtn = document.getElementById('play-pause-btn');
-        const backToLandingBtn = document.getElementById('back-to-landing');
+        const homeButton = document.getElementById('home-button');
         let emojiIntervals = []; // Array to hold intervals for stopping emojis
 
         // Play/Pause functionality
@@ -205,7 +205,7 @@
         // Function to start the game
         function startGame() {
             document.getElementById('start-game-page').style.display = 'none';
-            backToLandingBtn.style.display = 'block'; // Show the "Back to Landing Page" button
+            homeButton.style.display = 'block'; // Show the "Home" button
             initializeGame(); // Initialize the game setup
         }
 
@@ -343,7 +343,7 @@
             document.getElementById('score').remove();
             document.querySelector('.gun').remove();
             document.getElementById('restart-button').remove();
-            backToLandingBtn.style.display = 'none'; // Hide the "Back to Landing Page" button
+            homeButton.style.display = 'none'; // Hide the "Home" button
         }
     </script>
 </body>
