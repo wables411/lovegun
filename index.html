@@ -80,6 +80,8 @@
             bottom: 80px;
             transform: translateX(-50%) rotate(0deg);
             transform-origin: center bottom;
+            white-space: nowrap; /* Ensures the gun stays on one line */
+            width: fit-content; /* Ensures it only takes up the necessary width */
         }
         #score {
             font-size: 24px;
@@ -131,6 +133,8 @@
         @media screen and (max-width: 768px) {
             .gun {
                 font-size: 36px;
+                white-space: nowrap; /* Prevents the gun from splitting onto multiple lines */
+                width: fit-content; /* Ensures the gun takes up only the necessary width */
             }
             .falling-emoji, .heart {
                 font-size: 28px;
