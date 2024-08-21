@@ -17,14 +17,9 @@
             font-family: Arial, sans-serif;
             overflow: hidden;
         }
-        #landing-page, #game-page, #start-game-page {
+        #game-page, #start-game-page {
             text-align: center;
             width: 100%;
-        }
-        #header {
-            font-size: 48px;
-            color: white;
-            margin-bottom: 20px;
         }
         button {
             font-size: 24px;
@@ -114,7 +109,7 @@
         #restart-button:hover {
             background-color: #ff85c2;
         }
-        #home-button {
+        #links-button {
             display: none;
             position: fixed;
             bottom: 10px;
@@ -128,7 +123,7 @@
             cursor: pointer;
             z-index: 2;
         }
-        #home-button:hover {
+        #links-button:hover {
             background-color: #ff85c2;
         }
 
@@ -156,7 +151,7 @@
                 font-size: 14px;
                 padding: 8px;
             }
-            #home-button {
+            #links-button {
                 font-size: 14px;
                 padding: 8px;
             }
@@ -164,33 +159,24 @@
     </style>
 </head>
 <body>
-    <div id="landing-page">
-        <div id="header">▄︻デ══━一♡</div>
-        <button onclick="window.open('https://unicorn.meme/memoji', '_blank')">UwU</button><br>
-        <button onclick="showGameStartPage()">target practice</button><br>
-        <button onclick="window.open('https://x.com/lovegunUWU', '_blank')">twitter</button><br>
-        <button onclick="window.open('https://t.me/+zBD163zDwIVjOWRk', '_blank')">telegram</button>
-    </div>
-
     <div id="audio-controls">
         <button id="play-pause-btn">Play/Pause Music</button>
     </div>
 
     <audio id="background-music" src="NIGHTCORE Love Gun.mp3" loop autoplay></audio>
 
-    <div id="start-game-page" style="display: none;">
+    <div id="start-game-page">
         <button onclick="startGame()">Start Game</button>
     </div>
 
-    <button id="home-button" onclick="goToLandingPage()">Home</button>
+    <button id="links-button" onclick="goToLinksPage()">Links</button>
 
     <script>
         const backgroundMusic = document.getElementById('background-music');
         const playPauseBtn = document.getElementById('play-pause-btn');
-        const homeButton = document.getElementById('home-button');
-        let emojiIntervals = []; // Array to hold intervals for stopping emojis
+        const linksButton = document.getElementById('links-button');
+        let emojiIntervals = [];
 
-        // Play/Pause functionality
         playPauseBtn.addEventListener('click', function() {
             if (backgroundMusic.paused) {
                 backgroundMusic.play();
@@ -201,22 +187,16 @@
             }
         });
 
-        function showGameStartPage() {
-            document.getElementById('landing-page').style.display = 'none';
-            document.getElementById('start-game-page').style.display = 'block';
-        }
-
-        // Function to start the game
         function startGame() {
             document.getElementById('start-game-page').style.display = 'none';
-            homeButton.style.display = 'block'; // Show the "Home" button
-            initializeGame(); // Initialize the game setup
+            linksButton.style.display = 'block';
+            initializeGame();
         }
 
         function initializeGame() {
             const body = document.body;
-            body.style.cursor = "url('crosshair.png') 16 16, crosshair"; // Set custom cursor for game
-            body.style.backgroundColor = "#ff69b4"; // Keep the pink background
+            body.style.cursor = "url('crosshair.png') 16 16, crosshair";
+            body.style.backgroundColor = "#ff69b4";
 
             const score = document.createElement('div');
             score.id = 'score';
@@ -265,7 +245,7 @@
                     if (emoji.parentNode) {
                         gameArea.removeChild(emoji);
                     }
-                }, 10000); // Matches the fall animation duration
+                }, 10000);
 
                 emojiIntervals.push(emojiInterval);
 
@@ -337,17 +317,8 @@
             startFallingEmojis();
         }
 
-        function goToLandingPage() {
-            // Stop all emoji intervals
-            emojiIntervals.forEach(interval => clearInterval(interval));
-            emojiIntervals = [];
-
-            document.getElementById('landing-page').style.display = 'block'; // Show the landing page
-            document.getElementById('game').remove(); // Remove the game elements
-            document.getElementById('score').remove();
-            document.querySelector('.gun').remove();
-            document.getElementById('restart-button').remove();
-            homeButton.style.display = 'none'; // Hide the "Home" button
+        function goToLinksPage() {
+            window.location.href = 'https://lovegun.xyz';
         }
     </script>
 </body>
