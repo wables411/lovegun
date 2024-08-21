@@ -289,7 +289,7 @@
 
             function startFallingEmojis() {
                 createFallingEmoji(); // Start generating falling emojis
-                setTimeout(endGame, 150000); // Game duration: 2ish minutes
+                setTimeout(endGame, 150000); // Game duration: 2 minutes and 30 seconds
             }
 
             function endGame() {
@@ -297,7 +297,7 @@
                 emojiIntervals.forEach(interval => clearInterval(interval));
                 emojiIntervals = [];
 
-                alert('omg wow! ur love gunned down ' + currentScore + ' emojis in 90 seconds!');
+                alert('Great job! You gunned down ' + currentScore + ' emojis in 2 minutes and 30 seconds!');
                 gameArea.innerHTML = '';
                 currentScore = 0;
                 updateScoreDisplay();
