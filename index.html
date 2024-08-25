@@ -63,7 +63,7 @@
         .falling-emoji {
             font-size: 36px;
             position: absolute;
-            animation: fall 10s linear infinite;
+            animation: fall 6s linear infinite;
         }
         @keyframes fall {
             from { top: -50px; }
@@ -249,11 +249,11 @@
                     if (emoji.parentNode) {
                         gameArea.removeChild(emoji);
                     }
-                }, 10000);
+                }, 6000); // Matches the animation duration
 
                 emojiIntervals.push(emojiInterval);
 
-                const creationInterval = setTimeout(createFallingEmoji, Math.random() * 1000 + 500);
+                const creationInterval = setTimeout(createFallingEmoji, Math.random() * 800 + 400); // Faster interval for creation
                 emojiIntervals.push(creationInterval);
             }
 
