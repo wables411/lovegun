@@ -5,7 +5,161 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Love Gun</title>
     <style>
-        /* Same styles as before */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #ff69b4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+        #game-page, #start-game-page {
+            text-align: center;
+            width: 100%;
+        }
+        button {
+            font-size: 24px;
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
+            border: none;
+            border-radius: 10px;
+            background-color: #ff69b4;
+            color: white;
+            width: 200px;
+        }
+        button:hover {
+            background-color: #ff85c2;
+        }
+        #audio-controls {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            z-index: 1000;
+        }
+        #audio-controls button {
+            font-size: 16px;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #ff69b4;
+            color: white;
+            cursor: pointer;
+        }
+        #audio-controls button:hover {
+            background-color: #ff85c2;
+        }
+        #game {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            cursor: inherit;
+            z-index: 1;
+        }
+        .falling-emoji {
+            font-size: 36px;
+            position: absolute;
+            animation: fall 6s linear infinite;
+        }
+        @keyframes fall {
+            from { top: -50px; }
+            to { top: 100%; }
+        }
+        .heart {
+            font-size: 36px;
+            position: absolute;
+        }
+        .gun {
+            font-size: 48px;
+            position: absolute;
+            left: 50%;
+            bottom: 80px;
+            transform: translateX(-50%) rotate(0deg);
+            transform-origin: center bottom;
+            white-space: nowrap; /* Ensures the gun stays on one line */
+            width: fit-content; /* Ensures it only takes up the necessary width */
+        }
+        #score {
+            font-size: 24px;
+            margin: 10px;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 100px;
+            text-align: left;
+            z-index: 2;
+        }
+        #restart-button {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            padding: 10px 20px;
+            cursor: pointer;
+            border: none;
+            border-radius: 10px;
+            background-color: #ff69b4;
+            color: white;
+            z-index: 2;
+        }
+        #restart-button:hover {
+            background-color: #ff85c2;
+        }
+        #links-button {
+            display: none;
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 16px;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #ff69b4;
+            color: white;
+            cursor: pointer;
+            z-index: 2;
+        }
+        #links-button:hover {
+            background-color: #ff85c2;
+        }
+
+        /* Mobile Optimization */
+        @media screen and (max-width: 768px) {
+            .gun {
+                font-size: 36px;
+                white-space: nowrap; /* Prevents the gun from splitting onto multiple lines */
+                width: fit-content; /* Ensures the gun takes up only the necessary width */
+            }
+            .falling-emoji, .heart {
+                font-size: 28px;
+            }
+            #score {
+                font-size: 20px;
+                width: 80px;
+            }
+            #restart-button {
+                font-size: 20px;
+                padding: 8px 16px;
+            }
+            button {
+                font-size: 20px;
+                padding: 8px 16px;
+            }
+            #audio-controls button {
+                font-size: 14px;
+                padding: 8px;
+            }
+            #links-button {
+                font-size: 14px;
+                padding: 8px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -26,9 +180,6 @@
         const playPauseBtn = document.getElementById('play-pause-btn');
         const linksButton = document.getElementById('links-button');
         let emojiIntervals = [];
-        let level = 1;
-        const totalLevels = 3;
-        let currentScore = 0;
 
         playPauseBtn.addEventListener('click', function() {
             if (backgroundMusic.paused) {
@@ -72,10 +223,11 @@
             body.appendChild(restartButton);
 
             const emojis = ['😹', '🌽', '🤡🫵', '🏴', '🙂⛓️', '💸', '💎', '🎱', '🌕', '🐷', '🪨', '📄', '✂️', '💉🧬', '🇹🇼', '🌎☮️', '🥩', '🐸', '️‍🔥', '🎲', '🇺🇸', '🥨', '🍆', '🍣', '🇨🇳', '🥧', '🌮', '💩', '👽', '🍉', '🍑', '🚀', '💀'];
+            let currentScore = 0;
 
             function updateScoreDisplay() {
                 const paddedScore = currentScore.toString().padStart(3, '0');
-                score.textContent = `Score: ${paddedScore}`;
+                score.textContent = Score: ${paddedScore};
             }
 
             function getAngle(mouseX, mouseY) {
@@ -93,18 +245,15 @@
                 emoji.style.left = Math.random() * 90 + '%';
                 gameArea.appendChild(emoji);
 
-                const fallDuration = 6000 / level; // Faster fall with higher levels
-                emoji.style.animationDuration = `${fallDuration}ms`;
-
                 const emojiInterval = setTimeout(() => {
                     if (emoji.parentNode) {
                         gameArea.removeChild(emoji);
                     }
-                }, fallDuration);
+                }, 6000); // Matches the animation duration
 
                 emojiIntervals.push(emojiInterval);
 
-                const creationInterval = setTimeout(createFallingEmoji, Math.random() * 800 + 400 / level); // Faster creation with higher levels
+                const creationInterval = setTimeout(createFallingEmoji, Math.random() * 800 + 400); // Faster interval for creation
                 emojiIntervals.push(creationInterval);
             }
 
@@ -135,32 +284,19 @@
 
             function moveGun(event) {
                 const angle = getAngle(event.clientX, event.clientY);
-                gun.style.transform = `translateX(-50%) rotate(${angle}deg)`;
+                gun.style.transform = translateX(-50%) rotate(${angle}deg);
             }
 
             function startFallingEmojis() {
                 createFallingEmoji(); // Start generating falling emojis
-                setTimeout(nextLevel, 50000); // Each level lasts 50 seconds
-            }
-
-            function nextLevel() {
-                if (level < totalLevels) {
-                    level++;
-                    alert('Level ' + level + ' start! Faster emojis incoming!');
-                    clearIntervals();
-                    startFallingEmojis();
-                } else {
-                    endGame();
-                }
-            }
-
-            function clearIntervals() {
-                emojiIntervals.forEach(interval => clearInterval(interval));
-                emojiIntervals = [];
+                setTimeout(endGame, 150000); // Game duration: 2 minutes and 30 seconds
             }
 
             function endGame() {
-                clearIntervals();
+                // Stop all emoji intervals
+                emojiIntervals.forEach(interval => clearInterval(interval));
+                emojiIntervals = [];
+
                 alert('omg wow! your love gunned down ' + currentScore + ' memojis in 2.5 minutes UwU!');
                 gameArea.innerHTML = '';
                 currentScore = 0;
@@ -177,8 +313,6 @@
 
                 gameArea.innerHTML = ''; // Clear the game area
                 restartButton.style.display = 'none'; // Hide the restart button
-                level = 1; // Reset level
-                currentScore = 0; // Reset score
                 initializeGame(); // Start a new game
             }
 
