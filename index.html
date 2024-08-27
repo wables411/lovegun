@@ -222,12 +222,12 @@
             restartButton.onclick = restartGame;
             body.appendChild(restartButton);
 
-            const emojis = ['😹', '🌽', '🤡🫵', '🏴', '🙂⛓️', '💸', '💎', '🎱', '🌕', '🐷', '🪨', '📄', '✂️', '💉🧬', '🇹🇼', '🌎☮️', '🥩', '🐸', '️‍🔥', '🎲', '🇺🇸', '🥨', '🍆', '🍣', '🇨🇳', '🥧', '🌮', '💩', '👽', '🍉', '🍑', '🚀', '💀'];
+            const emojis = ['😹', '🌽', '🤡🫵', '💉🧬', '🇹🇼', '🌎☮️', '🥩', '🐸', '️‍🔥', '🎲', '🇺🇸', '🥨', '🍆', '🍣', '🇨🇳', '🥧', '🌮', '💩', '👽', '🍉', '🍑', '🚀', '💀'];
             let currentScore = 0;
 
             function updateScoreDisplay() {
                 const paddedScore = currentScore.toString().padStart(3, '0');
-                score.textContent = Score: ${paddedScore};
+                score.textContent = `Score: ${paddedScore}`;
             }
 
             function getAngle(mouseX, mouseY) {
@@ -284,7 +284,7 @@
 
             function moveGun(event) {
                 const angle = getAngle(event.clientX, event.clientY);
-                gun.style.transform = translateX(-50%) rotate(${angle}deg);
+                gun.style.transform = `translateX(-50%) rotate(${angle}deg)`;
             }
 
             function startFallingEmojis() {
