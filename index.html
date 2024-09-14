@@ -80,8 +80,8 @@
             bottom: 80px;
             transform: translateX(-50%) rotate(0deg);
             transform-origin: center bottom;
-            white-space: nowrap; /* Ensures the gun stays on one line */
-            width: fit-content; /* Ensures it only takes up the necessary width */
+            white-space: nowrap;
+            width: fit-content;
         }
         #score {
             font-size: 24px;
@@ -93,7 +93,7 @@
             text-align: left;
             z-index: 2;
         }
-        #restart-button {
+        #restart-button, #play-level-2-btn {
             display: none;
             position: absolute;
             top: 50%;
@@ -108,7 +108,7 @@
             color: white;
             z-index: 2;
         }
-        #restart-button:hover {
+        #restart-button:hover, #play-level-2-btn:hover {
             background-color: #ff85c2;
         }
         #links-button {
@@ -128,13 +128,11 @@
         #links-button:hover {
             background-color: #ff85c2;
         }
-
-        /* Mobile Optimization */
         @media screen and (max-width: 768px) {
             .gun {
                 font-size: 36px;
-                white-space: nowrap; /* Prevents the gun from splitting onto multiple lines */
-                width: fit-content; /* Ensures the gun takes up only the necessary width */
+                white-space: nowrap;
+                width: fit-content;
             }
             .falling-emoji, .heart {
                 font-size: 28px;
@@ -174,12 +172,16 @@
     </div>
 
     <button id="links-button" onclick="goToLinksPage()">Links</button>
+    <button id="play-level-2-btn">Play Level 2</button>
 
     <script>
         const backgroundMusic = document.getElementById('background-music');
         const playPauseBtn = document.getElementById('play-pause-btn');
         const linksButton = document.getElementById('links-button');
+        const playLevel2Btn = document.getElementById("play-level-2-btn");
         let emojiIntervals = [];
+        let level = 1;
+        let emojiFallSpeed = 1;
 
         playPauseBtn.addEventListener('click', function() {
             if (backgroundMusic.paused) {
@@ -198,9 +200,11 @@
         }
 
         function initializeGame() {
+            document.body.style.backgroundColor = level === 1 ? "#ff69b4" : "black";
+            const gunColor = level === 1 ? "black" : "pink";
+
             const body = document.body;
             body.style.cursor = "url('crosshair.png') 16 16, crosshair";
-            body.style.backgroundColor = "#ff69b4";
 
             const score = document.createElement('div');
             score.id = 'score';
@@ -210,6 +214,7 @@
             const gun = document.createElement('div');
             gun.className = 'gun';
             gun.textContent = '▄︻デ══‐一';
+            gun.style.color = gunColor;
             body.appendChild(gun);
 
             const gameArea = document.createElement('div');
@@ -249,11 +254,11 @@
                     if (emoji.parentNode) {
                         gameArea.removeChild(emoji);
                     }
-                }, 6000); // Matches the animation duration
+                }, 6000 / emojiFallSpeed);
 
                 emojiIntervals.push(emojiInterval);
 
-                const creationInterval = setTimeout(createFallingEmoji, Math.random() * 800 + 400); // Faster interval for creation
+                const creationInterval = setTimeout(createFallingEmoji, Math.random() * 800 + 400);
                 emojiIntervals.push(creationInterval);
             }
 
@@ -269,6 +274,7 @@
                     heart.style.top = rect.top + 'px';
                     gameArea.appendChild(heart);
 
+                    emoji.remove();```html
                     emoji.remove();
 
                     currentScore++;
@@ -288,12 +294,11 @@
             }
 
             function startFallingEmojis() {
-                createFallingEmoji(); // Start generating falling emojis
-                setTimeout(endGame, 150000); // Game duration: 2 minutes and 30 seconds
+                createFallingEmoji(); 
+                setTimeout(endGame, 150000); 
             }
 
             function endGame() {
-                // Stop all emoji intervals
                 emojiIntervals.forEach(interval => clearInterval(interval));
                 emojiIntervals = [];
 
@@ -303,17 +308,24 @@
                 updateScoreDisplay();
                 document.removeEventListener('mousemove', moveGun);
                 document.removeEventListener('click', shootEmoji);
-                restartButton.style.display = 'block';
+                if (level === 1) {
+                    playLevel2Btn.style.display = 'block';
+                } else {
+                    restartButton.style.display = 'block';
+                }
             }
 
-            function restartGame() {
-                // Clear old game elements
-                const oldGun = document.querySelector('.gun');
-                if (oldGun) oldGun.remove();
+            playLevel2Btn.addEventListener('click', () => {
+                playLevel2Btn.style.display = 'none';
+                level = 2;
+                emojiFallSpeed = 1.5;
+                startGame();
+            });
 
-                gameArea.innerHTML = ''; // Clear the game area
-                restartButton.style.display = 'none'; // Hide the restart button
-                initializeGame(); // Start a new game
+            function restartGame() {
+                gameArea.innerHTML = '';
+                restartButton.style.display = 'none';
+                initializeGame();
             }
 
             document.addEventListener('mousemove', moveGun);
