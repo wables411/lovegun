@@ -202,19 +202,26 @@
         function initializeGame() {
             document.body.style.backgroundColor = level === 1 ? "#ff69b4" : "black";
             const gunColor = level === 1 ? "black" : "pink";
+            const crosshairColor = level === 1 ? "black" : "pink";
+            const heartColor = level === 1 ? "black" : "pink";
+            const scoreColor = level === 1 ? "black" : "pink";
 
+            // Change the cursor to pink in level 2
             const body = document.body;
-            body.style.cursor = "url('crosshair.png') 16 16, crosshair";
+            body.style.cursor = level === 1 
+                ? "url('crosshair.png') 16 16, crosshair" 
+                : "url('crosshair-pink.png') 16 16, crosshair";
 
             const score = document.createElement('div');
             score.id = 'score';
             score.textContent = 'Score: 000';
+            score.style.color = scoreColor; // Set score color
             body.appendChild(score);
 
             const gun = document.createElement('div');
             gun.className = 'gun';
             gun.textContent = '▄︻デ══‐一';
-            gun.style.color = gunColor;
+            gun.style.color = gunColor; // Set gun color
             body.appendChild(gun);
 
             const gameArea = document.createElement('div');
@@ -272,6 +279,7 @@
                     heart.textContent = '♡';
                     heart.style.left = rect.left + 'px';
                     heart.style.top = rect.top + 'px';
+                    heart.style.color = heartColor; // Set heart color to pink
                     gameArea.appendChild(heart);
 
                     emoji.remove();
