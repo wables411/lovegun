@@ -269,35 +269,43 @@
                 emojiIntervals.push(creationInterval);
             }
 
-            function shootEmoji(event) {
-                const emoji = document.elementFromPoint(event.clientX, event.clientY);
+function shootEmoji(event) {
+    const emoji = document.elementFromPoint(event.clientX, event.clientY);
 
-                if (emoji && emoji.classList.contains('falling-emoji')) {
-                    const rect = emoji.getBoundingClientRect();
-                    const heart = document.createElement('div');
-                    heart.classList.add('heart');
-                    heart.textContent = '♡';
-                    heart.style.left = rect.left + 'px';
-                    heart.style.top = rect.top + 'px';
-                    heart.style.color = heartColor; // Set heart color to pink
-                    gameArea.appendChild(heart);
+    if (emoji && emoji.classList.contains('falling-emoji')) {
+        const rect = emoji.getBoundingClientRect();
+        const heart = document.createElement('div');
+        heart.classList.add('heart');
+        heart.textContent = '♡';
+        heart.style.left = rect.left + 'px';
+        heart.style.top = rect.top + 'px';
+        heart.style.color = heartColor; // Set heart color to pink
+        gameArea.appendChild(heart);
 
-                    emoji.remove();
-                    currentScore++;
-                    updateScoreDisplay();
+        emoji.remove();
+        currentScore++;
+        updateScoreDisplay();
 
-                    setTimeout(() => {
-                        if (heart.parentNode) {
-                            gameArea.removeChild(heart);
-                        }
-                    }, 1000);
-                }
+        setTimeout(() => {
+            if (heart.parentNode) {
+                gameArea.removeChild(heart);
             }
+        }, 1000);
+    }
 
-            function moveGun(event) {
-                const angle = getAngle(event.clientX, event.clientY);
-                gun.style.transform = `translateX(-50%) rotate(${angle}deg)`;
-            }
+    // Ensure the pink cursor stays active after shooting an emoji
+    document.body.style.cursor = level === 2 ? "url('crosshair-pink.png') 16 16, crosshair" : "url('crosshair.png') 16 16, crosshair";
+}
+
+
+function moveGun(event) {
+    const angle = getAngle(event.clientX, event.clientY);
+    gun.style.transform = `translateX(-50%) rotate(${angle}deg)`;
+
+    // Ensure the pink cursor stays active while moving the gun
+    document.body.style.cursor = level === 2 ? "url('crosshair-pink.png') 16 16, crosshair" : "url('crosshair.png') 16 16, crosshair";
+}
+
 
             function startFallingEmojis() {
                 createFallingEmoji(); 
