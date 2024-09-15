@@ -200,134 +200,142 @@
         }
 
         function initializeGame() {
-            const gunColor = "black"; // Keep gun color consistent
-            const scoreColor = "black"; // Keep score color consistent
+    const existingGun = document.querySelector('.gun');
+    if (existingGun) {
+        existingGun.remove(); // Remove the existing gun if it exists
+    }
 
-            const score = document.createElement('div');
-            score.id = 'score';
-            score.textContent = 'Score: 000';
-            score.style.color = scoreColor;
-            document.body.appendChild(score);
+    const gunColor = "black"; // Keep gun color consistent
+    const scoreColor = "black"; // Keep score color consistent
 
-            const gun = document.createElement('div');
-            gun.className = 'gun';
-            gun.textContent = '▄︻デ══‐一';
-            gun.style.color = gunColor;
-            document.body.appendChild(gun);
+    const existingScore = document.getElementById('score');
+    if (!existingScore) {  // Only create a new score element if it doesn't exist
+        const score = document.createElement('div');
+        score.id = 'score';
+        score.textContent = `Score: ${currentScore.toString().padStart(3, '0')}`;
+        score.style.color = scoreColor;
+        document.body.appendChild(score);
+    }
 
-            const gameArea = document.createElement('div');
-            gameArea.id = 'game';
-            document.body.appendChild(gameArea);
+    const gun = document.createElement('div');
+    gun.className = 'gun';
+    gun.textContent = '▄︻デ══‐一';
+    gun.style.color = gunColor;
+    document.body.appendChild(gun);
 
-            const restartButton = document.createElement('button');
-            restartButton.id = 'restart-button';
-            restartButton.textContent = 'Play Again';
-            restartButton.onclick = restartGame;
-            document.body.appendChild(restartButton);
+    const gameArea = document.createElement('div');
+    gameArea.id = 'game';
+    document.body.appendChild(gameArea);
 
-            const emojis = ['😹', '🌽', '🤡🫵', '💉🧬', '🇹🇼', '🌎☮️', '🥩', '🐸', '️‍🔥', '🎲', '🇺🇸', '🥨', '🍆', '🍣', '🇨🇳', '🥧', '🌮', '💩', '👽', '🍉', '🍑', '🚀', '💀'];
-            let currentScore = 0;
+    const restartButton = document.createElement('button');
+    restartButton.id = 'restart-button';
+    restartButton.textContent = 'Play Again';
+    restartButton.onclick = restartGame;
+    document.body.appendChild(restartButton);
 
-            function updateScoreDisplay() {
-                const paddedScore = currentScore.toString().padStart(3, '0');
-                score.textContent = `Score: ${paddedScore}`;
+    const emojis = ['😹', '🌽', '🤡🫵', '💉🧬', '🇹🇼', '🌎☮️', '🥩', '🐸', '️‍🔥', '🎲', '🇺🇸', '🥨', '🍆', '🍣', '🇨🇳', '🥧', '🌮', '💩', '👽', '🍉', '🍑', '🚀', '💀'];
+
+    function updateScoreDisplay() {
+        const paddedScore = currentScore.toString().padStart(3, '0');
+        const scoreElement = document.getElementById('score');
+        scoreElement.textContent = `Score: ${paddedScore}`;
+    }
+
+    function getAngle(mouseX, mouseY) {
+        const rect = gun.getBoundingClientRect();
+        const gunX = rect.left + rect.width / 2;
+        const gunY = rect.top + rect.height / 2;
+        const angle = Math.atan2(mouseY - gunY, mouseX - gunX) * (180 / Math.PI);
+        return angle;
+    }
+
+    function createFallingEmoji() {
+        const emoji = document.createElement('div');
+        emoji.classList.add('falling-emoji');
+        emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        emoji.style.left = Math.random() * 90 + '%';
+        gameArea.appendChild(emoji);
+
+        const emojiInterval = setTimeout(() => {
+            if (emoji.parentNode) {
+                gameArea.removeChild(emoji);
             }
+        }, 6000 / emojiFallSpeed);
 
-            function getAngle(mouseX, mouseY) {
-                const rect = gun.getBoundingClientRect();
-                const gunX = rect.left + rect.width / 2;
-                const gunY = rect.top + rect.height / 2;
-                const angle = Math.atan2(mouseY - gunY, mouseX - gunX) * (180 / Math.PI);
-                return angle;
-            }
+        emojiIntervals.push(emojiInterval);
 
-            function createFallingEmoji() {
-                const emoji = document.createElement('div');
-                emoji.classList.add('falling-emoji');
-                emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-                emoji.style.left = Math.random() * 90 + '%';
-                gameArea.appendChild(emoji);
+        const creationInterval = setTimeout(createFallingEmoji, Math.random() * 800 + 400);
+        emojiIntervals.push(creationInterval);
+    }
 
-                const emojiInterval = setTimeout(() => {
-                    if (emoji.parentNode) {
-                        gameArea.removeChild(emoji);
-                    }
-                }, 6000 / emojiFallSpeed);
+    function shootEmoji(event) {
+        const emoji = document.elementFromPoint(event.clientX, event.clientY);
 
-                emojiIntervals.push(emojiInterval);
+        if (emoji && emoji.classList.contains('falling-emoji')) {
+            const rect = emoji.getBoundingClientRect();
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.textContent = '♡';
+            heart.style.left = rect.left + 'px';
+            heart.style.top = rect.top + 'px';
+            gameArea.appendChild(heart);
 
-                const creationInterval = setTimeout(createFallingEmoji, Math.random() * 800 + 400);
-                emojiIntervals.push(creationInterval);
-            }
+            emoji.remove();
+            currentScore++;  // Continue from the current score
+            updateScoreDisplay();
 
-            function shootEmoji(event) {
-                const emoji = document.elementFromPoint(event.clientX, event.clientY);
-
-                if (emoji && emoji.classList.contains('falling-emoji')) {
-                    const rect = emoji.getBoundingClientRect();
-                    const heart = document.createElement('div');
-                    heart.classList.add('heart');
-                    heart.textContent = '♡';
-                    heart.style.left = rect.left + 'px';
-                    heart.style.top = rect.top + 'px';
-                    gameArea.appendChild(heart);
-
-                    emoji.remove();
-                    currentScore++;
-                    updateScoreDisplay();
-
-                    setTimeout(() => {
-                        if (heart.parentNode) {
-                            gameArea.removeChild(heart);
-                        }
-                    }, 1000);
+            setTimeout(() => {
+                if (heart.parentNode) {
+                    gameArea.removeChild(heart);
                 }
-            }
-
-            function moveGun(event) {
-                const angle = getAngle(event.clientX, event.clientY);
-                gun.style.transform = `translateX(-50%) rotate(${angle}deg)`;
-            }
-
-            function startFallingEmojis() {
-                createFallingEmoji(); 
-                setTimeout(endGame, 150000); 
-            }
-
-            function endGame() {
-                emojiIntervals.forEach(interval => clearInterval(interval));
-                emojiIntervals = [];
-
-                alert('omg wow! your love gunned down ' + currentScore + ' memojis in 2.5 minutes UwU!');
-                gameArea.innerHTML = '';
-                currentScore = 0;
-                updateScoreDisplay();
-                document.removeEventListener('mousemove', moveGun);
-                document.removeEventListener('click', shootEmoji);
-                if (level === 1) {
-                    playLevel2Btn.style.display = 'block';
-                } else {
-                    restartButton.style.display = 'block';
-                }
-            }
-
-            playLevel2Btn.addEventListener('click', () => {
-                playLevel2Btn.style.display = 'none';
-                level = 2;
-                emojiFallSpeed = 1.5; // Increase speed for level 2
-                startGame();
-            });
-
-            function restartGame() {
-                gameArea.innerHTML = '';
-                restartButton.style.display = 'none';
-                initializeGame();
-            }
-
-            document.addEventListener('mousemove', moveGun);
-            document.addEventListener('click', shootEmoji);
-            startFallingEmojis();
+            }, 1000);
         }
+    }
+
+    function moveGun(event) {
+        const angle = getAngle(event.clientX, event.clientY);
+        gun.style.transform = `translateX(-50%) rotate(${angle}deg)`;
+    }
+
+    function startFallingEmojis() {
+        createFallingEmoji(); 
+        setTimeout(endGame, 150000); 
+    }
+
+    function endGame() {
+        emojiIntervals.forEach(interval => clearInterval(interval));
+        emojiIntervals = [];
+
+        alert('omg wow! your love gunned down ' + currentScore + ' memojis in 2.5 minutes UwU!');
+        gameArea.innerHTML = '';
+        document.removeEventListener('mousemove', moveGun);
+        document.removeEventListener('click', shootEmoji);
+        if (level === 1) {
+            playLevel2Btn.style.display = 'block';
+        } else {
+            restartButton.style.display = 'block';
+        }
+    }
+
+    playLevel2Btn.addEventListener('click', () => {
+        playLevel2Btn.style.display = 'none';
+        level = 2;
+        emojiFallSpeed = 1.5; // Increase speed for level 2
+        initializeGame();  // Restart game with the current score
+    });
+
+    function restartGame() {
+        gameArea.innerHTML = '';
+        restartButton.style.display = 'none';
+        currentScore = 0;  // Optionally reset score to 0 for a full restart
+        initializeGame();
+    }
+
+    document.addEventListener('mousemove', moveGun);
+    document.addEventListener('click', shootEmoji);
+    startFallingEmojis();
+}
+
 
         function goToLinksPage() {
             window.location.href = 'https://lovegun.xyz';
