@@ -49,21 +49,20 @@
             border-radius: 5px;
             background-color: #ff69b4;
             color: white;
-            cursor: pointer;
-        }
-        #audio-controls button:hover {
-            background-color: #ff85c2;
+            cursor: url('crosshair.png'), auto; /* Ensure cursor is crosshair on buttons */
         }
         #game {
             width: 100%;
             height: 100vh;
             position: relative;
             z-index: 1;
+            cursor: url('crosshair.png'), auto; /* Ensure cursor stays as crosshair during the game */
         }
         .falling-emoji {
             font-size: 36px;
             position: absolute;
             animation: fall 6s linear infinite;
+            cursor: url('crosshair.png'), auto; /* Ensure cursor stays as crosshair on falling emojis */
         }
         @keyframes fall {
             from { top: -50px; }
@@ -73,6 +72,7 @@
             font-size: 36px;
             position: absolute;
             animation: fade-out 1s forwards;
+            cursor: url('crosshair.png'), auto; /* Ensure cursor stays as crosshair on hearts */
         }
         @keyframes fade-out {
             from { opacity: 1; }
@@ -87,6 +87,7 @@
             transform-origin: center bottom;
             white-space: nowrap;
             width: fit-content;
+            cursor: url('crosshair.png'), auto; /* Ensure cursor stays as crosshair on the gun */
         }
         #score {
             font-size: 24px;
@@ -97,6 +98,7 @@
             width: 100px;
             text-align: left;
             z-index: 2;
+            cursor: url('crosshair.png'), auto; /* Ensure cursor stays as crosshair on score area */
         }
         #restart-button, #play-next-level-btn {
             display: none;
@@ -106,7 +108,7 @@
             transform: translate(-50%, -50%);
             font-size: 24px;
             padding: 10px 20px;
-            cursor: pointer;
+            cursor: url('crosshair.png'), auto; /* Ensure cursor stays as crosshair on restart button */
             border: none;
             border-radius: 10px;
             background-color: #ff69b4;
@@ -127,7 +129,7 @@
             border-radius: 5px;
             background-color: #ff69b4;
             color: white;
-            cursor: pointer;
+            cursor: url('crosshair.png'), auto; /* Ensure cursor stays as crosshair on links button */
             z-index: 2;
         }
         #links-button:hover {
@@ -220,6 +222,7 @@
                 score.id = 'score';
                 score.textContent = `Score: ${currentScore.toString().padStart(3, '0')}`;
                 score.style.color = scoreColor;
+                score.style.cursor = "url('crosshair.png'), auto"; // Ensure cursor stays on score
                 document.body.appendChild(score);
             }
 
@@ -227,15 +230,18 @@
             gun.className = 'gun';
             gun.textContent = '▄︻デ══‐一';
             gun.style.color = gunColor;
+            gun.style.cursor = "url('crosshair.png'), auto"; // Ensure cursor stays on gun
             document.body.appendChild(gun);
 
             const gameArea = document.createElement('div');
             gameArea.id = 'game';
+            gameArea.style.cursor = "url('crosshair.png'), auto"; // Ensure cursor stays on game area
             document.body.appendChild(gameArea);
 
             const restartButton = document.createElement('button');
             restartButton.id = 'restart-button';
             restartButton.textContent = 'Play Again';
+            restartButton.style.cursor = "url('crosshair.png'), auto"; // Ensure cursor stays on restart button
             restartButton.onclick = restartGame;
             document.body.appendChild(restartButton);
 
@@ -260,6 +266,7 @@
                 emoji.classList.add('falling-emoji');
                 emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
                 emoji.style.left = Math.random() * 90 + '%';
+                emoji.style.cursor = "url('crosshair.png'), auto"; // Ensure cursor stays on falling emoji
                 gameArea.appendChild(emoji);
 
                 const emojiInterval = setTimeout(() => {
@@ -284,6 +291,7 @@
                     heart.textContent = '♡';
                     heart.style.left = `${rect.left}px`;
                     heart.style.top = `${rect.top}px`;
+                    heart.style.cursor = "url('crosshair.png'), auto"; // Ensure cursor stays on heart
                     gameArea.appendChild(heart); // Show heart every time
 
                     emoji.remove();
