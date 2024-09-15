@@ -93,7 +93,7 @@
             text-align: left;
             z-index: 2;
         }
-        #restart-button, #play-level-2-btn {
+        #restart-button, #play-next-level-btn {
             display: none;
             position: absolute;
             top: 50%;
@@ -108,7 +108,7 @@
             color: white;
             z-index: 2;
         }
-        #restart-button:hover, #play-level-2-btn:hover {
+        #restart-button:hover, #play-next-level-btn:hover {
             background-color: #ff85c2;
         }
         #links-button {
@@ -172,16 +172,16 @@
     </div>
 
     <button id="links-button" onclick="goToLinksPage()">Links</button>
-    <button id="play-level-2-btn">Play Level 2</button>
+    <button id="play-next-level-btn">Play Next Level</button>
 
     <script>
         const backgroundMusic = document.getElementById('background-music');
         const playPauseBtn = document.getElementById('play-pause-btn');
         const linksButton = document.getElementById('links-button');
-        const playLevel2Btn = document.getElementById("play-level-2-btn");
+        const playNextLevelBtn = document.getElementById("play-next-level-btn");
         let emojiIntervals = [];
         let level = 1;
-        let emojiFallSpeed = 1;
+        let baseSpeed = 1; // Base speed for level 1
         let currentScore = 0; // Initialize the score
 
         playPauseBtn.addEventListener('click', function() {
@@ -261,7 +261,7 @@
                     if (emoji.parentNode) {
                         gameArea.removeChild(emoji);
                     }
-                }, 6000 / emojiFallSpeed);
+                }, 6000 / baseSpeed); // Emoji fall speed adjusts based on level
 
                 emojiIntervals.push(emojiInterval);
 
@@ -307,28 +307,31 @@
                 emojiIntervals.forEach(interval => clearInterval(interval));
                 emojiIntervals = [];
 
-                alert('omg wow! your love gunned down ' + currentScore + ' memojis in 2.5 minutes UwU!');
+                const totalTime = level <= 2 ? "2.5 minutes" : "5 minutes"; // Update based on level
+                alert(`omg wow! your love gunned down ${currentScore} memojis in ${totalTime} UwU!`);
                 gameArea.innerHTML = '';
                 document.removeEventListener('mousemove', moveGun);
                 document.removeEventListener('click', shootEmoji);
-                if (level === 1) {
-                    playLevel2Btn.style.display = 'block';
+                if (level < 10) {
+                    playNextLevelBtn.style.display = 'block';
                 } else {
                     restartButton.style.display = 'block';
                 }
             }
 
-            playLevel2Btn.addEventListener('click', () => {
-                playLevel2Btn.style.display = 'none';
-                level = 2;
-                emojiFallSpeed = 1.5; // Increase speed for level 2
-                initializeGame();  // Restart game with the current score
+            playNextLevelBtn.addEventListener('click', () => {
+                playNextLevelBtn.style.display = 'none';
+                level++;
+                baseSpeed *= 1.1; // Increase speed by 10% per level
+                initializeGame();  // Restart game with the current score and increased speed
             });
 
             function restartGame() {
                 gameArea.innerHTML = '';
                 restartButton.style.display = 'none';
                 currentScore = 0;  // Optionally reset score to 0 for a full restart
+                level = 1; // Reset to level 1
+                baseSpeed = 1; // Reset speed
                 initializeGame();
             }
 
