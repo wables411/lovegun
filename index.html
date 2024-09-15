@@ -16,6 +16,7 @@
             align-items: center;
             font-family: Arial, sans-serif;
             overflow: hidden;
+            cursor: url('crosshair.png'), auto; /* Set crosshair cursor globally */
         }
         #game-page, #start-game-page {
             text-align: center;
@@ -57,7 +58,6 @@
             width: 100%;
             height: 100vh;
             position: relative;
-            cursor: inherit;
             z-index: 1;
         }
         .falling-emoji {
@@ -72,6 +72,11 @@
         .heart {
             font-size: 36px;
             position: absolute;
+            animation: fade-out 1s forwards;
+        }
+        @keyframes fade-out {
+            from { opacity: 1; }
+            to { opacity: 0; }
         }
         .gun {
             font-size: 48px;
@@ -277,9 +282,9 @@
                     const heart = document.createElement('div');
                     heart.classList.add('heart');
                     heart.textContent = '♡';
-                    heart.style.left = rect.left + 'px';
-                    heart.style.top = rect.top + 'px';
-                    gameArea.appendChild(heart);
+                    heart.style.left = `${rect.left}px`;
+                    heart.style.top = `${rect.top}px`;
+                    gameArea.appendChild(heart); // Show heart every time
 
                     emoji.remove();
                     currentScore++;  // Continue from the current score
@@ -289,7 +294,7 @@
                         if (heart.parentNode) {
                             gameArea.removeChild(heart);
                         }
-                    }, 1000);
+                    }, 1000); // Heart stays for 1 second
                 }
             }
 
