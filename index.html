@@ -200,39 +200,30 @@
         }
 
         function initializeGame() {
-            document.body.style.backgroundColor = level === 1 ? "#ff69b4" : "black";
-            const gunColor = level === 1 ? "black" : "pink";
-            const crosshairColor = level === 1 ? "black" : "pink";
-            const heartColor = level === 1 ? "black" : "pink";
-            const scoreColor = level === 1 ? "black" : "pink";
-
-            // Change the cursor to pink in level 2
-            const body = document.body;
-            body.style.cursor = level === 1 
-                ? "url('crosshair.png') 16 16, crosshair" 
-                : "url('crosshair-pink.png') 16 16, crosshair";
+            const gunColor = "black"; // Keep gun color consistent
+            const scoreColor = "black"; // Keep score color consistent
 
             const score = document.createElement('div');
             score.id = 'score';
             score.textContent = 'Score: 000';
-            score.style.color = scoreColor; // Set score color
-            body.appendChild(score);
+            score.style.color = scoreColor;
+            document.body.appendChild(score);
 
             const gun = document.createElement('div');
             gun.className = 'gun';
             gun.textContent = '▄︻デ══‐一';
-            gun.style.color = gunColor; // Set gun color
-            body.appendChild(gun);
+            gun.style.color = gunColor;
+            document.body.appendChild(gun);
 
             const gameArea = document.createElement('div');
             gameArea.id = 'game';
-            body.appendChild(gameArea);
+            document.body.appendChild(gameArea);
 
             const restartButton = document.createElement('button');
             restartButton.id = 'restart-button';
             restartButton.textContent = 'Play Again';
             restartButton.onclick = restartGame;
-            body.appendChild(restartButton);
+            document.body.appendChild(restartButton);
 
             const emojis = ['😹', '🌽', '🤡🫵', '💉🧬', '🇹🇼', '🌎☮️', '🥩', '🐸', '️‍🔥', '🎲', '🇺🇸', '🥨', '🍆', '🍣', '🇨🇳', '🥧', '🌮', '💩', '👽', '🍉', '🍑', '🚀', '💀'];
             let currentScore = 0;
@@ -269,43 +260,34 @@
                 emojiIntervals.push(creationInterval);
             }
 
-function shootEmoji(event) {
-    const emoji = document.elementFromPoint(event.clientX, event.clientY);
+            function shootEmoji(event) {
+                const emoji = document.elementFromPoint(event.clientX, event.clientY);
 
-    if (emoji && emoji.classList.contains('falling-emoji')) {
-        const rect = emoji.getBoundingClientRect();
-        const heart = document.createElement('div');
-        heart.classList.add('heart');
-        heart.textContent = '♡';
-        heart.style.left = rect.left + 'px';
-        heart.style.top = rect.top + 'px';
-        heart.style.color = heartColor; // Set heart color to pink
-        gameArea.appendChild(heart);
+                if (emoji && emoji.classList.contains('falling-emoji')) {
+                    const rect = emoji.getBoundingClientRect();
+                    const heart = document.createElement('div');
+                    heart.classList.add('heart');
+                    heart.textContent = '♡';
+                    heart.style.left = rect.left + 'px';
+                    heart.style.top = rect.top + 'px';
+                    gameArea.appendChild(heart);
 
-        emoji.remove();
-        currentScore++;
-        updateScoreDisplay();
+                    emoji.remove();
+                    currentScore++;
+                    updateScoreDisplay();
 
-        setTimeout(() => {
-            if (heart.parentNode) {
-                gameArea.removeChild(heart);
+                    setTimeout(() => {
+                        if (heart.parentNode) {
+                            gameArea.removeChild(heart);
+                        }
+                    }, 1000);
+                }
             }
-        }, 1000);
-    }
 
-    // Ensure the pink cursor stays active after shooting an emoji
-    document.body.style.cursor = level === 2 ? "url('crosshair-pink.png') 16 16, crosshair" : "url('crosshair.png') 16 16, crosshair";
-}
-
-
-function moveGun(event) {
-    const angle = getAngle(event.clientX, event.clientY);
-    gun.style.transform = `translateX(-50%) rotate(${angle}deg)`;
-
-    // Ensure the pink cursor stays active while moving the gun
-    document.body.style.cursor = level === 2 ? "url('crosshair-pink.png') 16 16, crosshair" : "url('crosshair.png') 16 16, crosshair";
-}
-
+            function moveGun(event) {
+                const angle = getAngle(event.clientX, event.clientY);
+                gun.style.transform = `translateX(-50%) rotate(${angle}deg)`;
+            }
 
             function startFallingEmojis() {
                 createFallingEmoji(); 
@@ -332,7 +314,7 @@ function moveGun(event) {
             playLevel2Btn.addEventListener('click', () => {
                 playLevel2Btn.style.display = 'none';
                 level = 2;
-                emojiFallSpeed = 1.5;
+                emojiFallSpeed = 1.5; // Increase speed for level 2
                 startGame();
             });
 
