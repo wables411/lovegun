@@ -117,24 +117,25 @@
         }
         #restart-button:hover, #play-next-level-btn:hover {
             background-color: #ff85c2;
-        }
-        #links-button {
-            display: none;
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            font-size: 16px;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            background-color: #ff69b4;
-            color: white;
-            cursor: url('crosshair.png') 16 16, auto; /* Ensure crosshair on links button */
-            z-index: 2;
-        }
-        #links-button:hover {
-            background-color: #ff85c2;
-        }
+#links-button {
+    display: none;
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    font-size: 20px; /* Adjusted for emoji size */
+    padding: 12px;
+    border: none;
+    border-radius: 50%; /* Circular button for emoji */
+    background-color: #ff69b4;
+    color: white;
+    cursor: url('crosshair.png') 16 16, auto; /* Custom cursor */
+    z-index: 2;
+    content: "🏠"; /* Adding house emoji */
+}
+#links-button:hover {
+    background-color: #ff85c2;
+}
+
         @media screen and (max-width: 768px) {
             .gun {
                 font-size: 36px;
@@ -191,15 +192,16 @@
         let baseSpeed = 1; // Base speed for level 1
         let currentScore = 0; // Initialize the score
 
-        playPauseBtn.addEventListener('click', function() {
-            if (backgroundMusic.paused) {
-                backgroundMusic.play();
-                playPauseBtn.textContent = 'Pause Music';
-            } else {
-                backgroundMusic.pause();
-                playPauseBtn.textContent = 'Play Music';
-            }
-        });
+playPauseBtn.addEventListener('click', function() {
+    if (backgroundMusic.paused) {
+        backgroundMusic.play();
+        playPauseBtn.textContent = '⏸️'; // Show pause icon when music is playing
+    } else {
+        backgroundMusic.pause();
+        playPauseBtn.textContent = '▶️'; // Show play icon when music is paused
+    }
+});
+
 
         function startGame() {
             document.getElementById('start-game-page').style.display = 'none';
