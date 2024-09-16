@@ -57,6 +57,7 @@
             position: relative;
             z-index: 1;
             cursor: inherit;
+            overflow: hidden;
         }
         .falling-emoji {
             font-size: 36px;
@@ -65,8 +66,8 @@
             cursor: inherit;
         }
         @keyframes fall {
-            from { top: -50px; }
-            to { top: calc(100% + 50px); }
+            from { transform: translateY(-50px); }
+            to { transform: translateY(calc(100vh + 50px)); }
         }
         .heart {
             font-size: 36px;
@@ -240,9 +241,13 @@
             gun.textContent = '▄︻デ══‐一';
             document.body.appendChild(gun);
 
-            const gameArea = document.createElement('div');
-            gameArea.id = 'game';
-            document.body.appendChild(gameArea);
+            const gameArea = document.getElementById('game') || document.createElement('div');
+            if (!gameArea.id) {
+                gameArea.id = 'game';
+                document.body.appendChild(gameArea);
+            } else {
+                gameArea.innerHTML = ''; // Clear existing emojis
+            }
 
             updateScoreDisplay();
             updateLevelDisplay();
@@ -279,7 +284,7 @@
                 const emoji = document.createElement('div');
                 emoji.classList.add('falling-emoji');
                 emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-                emoji.style.left = `${Math.random() * 90}%`;
+                emoji.style.left = `${Math.random() * 100}%`;
                 gameArea.appendChild(emoji);
 
                 const fallDuration = 6000 / baseSpeed;
@@ -292,9 +297,6 @@
                 }, fallDuration);
 
                 emojiIntervals.push(emojiInterval);
-
-                const creationInterval = setTimeout(createFallingEmoji, Math.random() * 800 + 400);
-                emojiIntervals.push(creationInterval);
             }
 
             function shootEmoji(event) {
@@ -327,7 +329,13 @@
             }
 
             function startFallingEmojis() {
-                createFallingEmoji(); 
+                function createEmoji() {
+                    createFallingEmoji();
+                    const nextInterval = Math.random() * 800 + 400;
+                    setTimeout(createEmoji, nextInterval);
+                }
+                createEmoji();
+
                 let timeLeft = 150; // 2.5 minutes in seconds
                 updateTimerDisplay(timeLeft);
                 
@@ -343,7 +351,7 @@
 
             function endLevel() {
                 clearInterval(timerInterval);
-                emojiIntervals.forEach(interval => clearInterval(interval));
+                emojiIntervals.forEach(interval => clearTimeout(interval));
                 emojiIntervals = [];
 
                 document.removeEventListener('mousemove', moveGun);
