@@ -16,7 +16,7 @@
             align-items: center;
             font-family: Arial, sans-serif;
             overflow: hidden;
-            cursor: url('crosshair.png') 16 16, auto; /* Force crosshair cursor globally */
+            cursor: url('crosshair.png') 16 16, auto;
         }
         #game-page, #start-game-page {
             text-align: center;
@@ -26,7 +26,7 @@
             font-size: 24px;
             padding: 10px 20px;
             margin: 10px;
-            cursor: url('crosshair.png') 16 16, auto; /* Force crosshair on buttons */
+            cursor: url('crosshair.png') 16 16, auto;
             border: none;
             border-radius: 10px;
             background-color: #ff69b4;
@@ -49,20 +49,20 @@
             border-radius: 5px;
             background-color: #ff69b4;
             color: white;
-            cursor: url('crosshair.png') 16 16, auto; /* Ensure cursor is crosshair on buttons */
+            cursor: url('crosshair.png') 16 16, auto;
         }
         #game {
             width: 100%;
             height: 100vh;
             position: relative;
             z-index: 1;
-            cursor: inherit; /* Inherit the cursor from body */
+            cursor: inherit;
         }
         .falling-emoji {
             font-size: 36px;
             position: absolute;
             animation: fall 6s linear infinite;
-            cursor: inherit; /* Inherit the cursor */
+            cursor: inherit;
         }
         @keyframes fall {
             from { top: -50px; }
@@ -72,7 +72,7 @@
             font-size: 36px;
             position: absolute;
             animation: fade-out 1s forwards;
-            cursor: inherit; /* Inherit the cursor */
+            cursor: inherit;
         }
         @keyframes fade-out {
             from { opacity: 1; }
@@ -87,7 +87,7 @@
             transform-origin: center bottom;
             white-space: nowrap;
             width: fit-content;
-            cursor: inherit; /* Inherit the cursor */
+            cursor: inherit;
         }
         #score {
             font-size: 24px;
@@ -98,7 +98,7 @@
             width: 100px;
             text-align: left;
             z-index: 2;
-            cursor: inherit; /* Ensure cursor stays on score area */
+            cursor: inherit;
         }
         #restart-button, #play-next-level-btn {
             display: none;
@@ -108,7 +108,7 @@
             transform: translate(-50%, -50%);
             font-size: 24px;
             padding: 10px 20px;
-            cursor: url('crosshair.png') 16 16, auto; /* Ensure crosshair on buttons */
+            cursor: url('crosshair.png') 16 16, auto;
             border: none;
             border-radius: 10px;
             background-color: #ff69b4;
@@ -117,24 +117,24 @@
         }
         #restart-button:hover, #play-next-level-btn:hover {
             background-color: #ff85c2;
-#links-button {
-    display: none;
-    position: fixed;
-    bottom: 10px;
-    right: 10px;
-    font-size: 20px; /* Adjusted for emoji size */
-    padding: 12px;
-    border: none;
-    border-radius: 50%; /* Circular button for emoji */
-    background-color: #ff69b4;
-    color: white;
-    cursor: url('crosshair.png') 16 16, auto; /* Custom cursor */
-    z-index: 2;
-    content: "🏠"; /* Adding house emoji */
-}
-#links-button:hover {
-    background-color: #ff85c2;
-}
+        }
+        #links-button {
+            display: none;
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 20px;
+            padding: 12px;
+            border: none;
+            border-radius: 50%;
+            background-color: #ff69b4;
+            color: white;
+            cursor: url('crosshair.png') 16 16, auto;
+            z-index: 2;
+        }
+        #links-button:hover {
+            background-color: #ff85c2;
+        }
 
         @media screen and (max-width: 768px) {
             .gun {
@@ -170,7 +170,7 @@
 </head>
 <body>
     <div id="audio-controls">
-        <button id="play-pause-btn">Play/Pause Music</button>
+        <button id="play-pause-btn">⏸️</button>
     </div>
 
     <audio id="background-music" src="NIGHTCORE Love Gun.mp3" loop autoplay></audio>
@@ -179,7 +179,7 @@
         <button onclick="startGame()">Start Game</button>
     </div>
 
-    <button id="links-button" onclick="goToLinksPage()">Links</button>
+    <button id="links-button" onclick="goToLinksPage()">🏠</button>
     <button id="play-next-level-btn">Play Next Level</button>
 
     <script>
@@ -189,19 +189,18 @@
         const playNextLevelBtn = document.getElementById("play-next-level-btn");
         let emojiIntervals = [];
         let level = 1;
-        let baseSpeed = 1; // Base speed for level 1
-        let currentScore = 0; // Initialize the score
+        let baseSpeed = 1;
+        let currentScore = 0;
 
-playPauseBtn.addEventListener('click', function() {
-    if (backgroundMusic.paused) {
-        backgroundMusic.play();
-        playPauseBtn.textContent = '⏸️'; // Show pause icon when music is playing
-    } else {
-        backgroundMusic.pause();
-        playPauseBtn.textContent = '▶️'; // Show play icon when music is paused
-    }
-});
-
+        playPauseBtn.addEventListener('click', function() {
+            if (backgroundMusic.paused) {
+                backgroundMusic.play();
+                playPauseBtn.textContent = '⏸️'; // Show pause icon when music is playing
+            } else {
+                backgroundMusic.pause();
+                playPauseBtn.textContent = '▶️'; // Show play icon when music is paused
+            }
+        });
 
         function startGame() {
             document.getElementById('start-game-page').style.display = 'none';
@@ -212,17 +211,17 @@ playPauseBtn.addEventListener('click', function() {
         function initializeGame() {
             const existingGun = document.querySelector('.gun');
             if (existingGun) {
-                existingGun.remove(); // Remove the existing gun if it exists
+                existingGun.remove();
             }
 
-            const gunColor = "black"; // Keep gun color consistent
-            const scoreColor = "black"; // Keep score color consistent
+            const gunColor = "black";
+            const scoreColor = "black";
 
             const existingScore = document.getElementById('score');
-            if (!existingScore) {  // Only create a new score element if it doesn't exist
+            if (!existingScore) {
                 const score = document.createElement('div');
                 score.id = 'score';
-                score.textContent = `Score: ${currentScore.toString().padStart(3, '0')}`;
+                score.textContent = Score: ${currentScore.toString().padStart(3, '0')};
                 document.body.appendChild(score);
             }
 
@@ -246,7 +245,7 @@ playPauseBtn.addEventListener('click', function() {
             function updateScoreDisplay() {
                 const paddedScore = currentScore.toString().padStart(3, '0');
                 const scoreElement = document.getElementById('score');
-                scoreElement.textContent = `Score: ${paddedScore}`;
+                scoreElement.textContent = Score: ${paddedScore};
             }
 
             function getAngle(mouseX, mouseY) {
