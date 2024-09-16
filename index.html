@@ -66,7 +66,7 @@
         }
         @keyframes fall {
             from { top: -50px; }
-            to { top: 100%; }
+            to { top: calc(100% + 50px); }
         }
         .heart {
             font-size: 36px;
@@ -89,18 +89,19 @@
             width: fit-content;
             cursor: inherit;
         }
-        #score, #level {
+        #score, #level, #timer {
             font-size: 24px;
             margin: 10px;
             position: absolute;
             top: 10px;
-            width: 100px;
+            width: 150px;
             text-align: left;
             z-index: 2;
             cursor: inherit;
         }
         #score { left: 10px; }
-        #level { right: 10px; }
+        #level { right: 10px; text-align: right; }
+        #timer { left: 50%; transform: translateX(-50%); text-align: center; }
         #restart-button, #play-next-level-btn {
             display: none;
             position: absolute;
@@ -145,9 +146,9 @@
             .falling-emoji, .heart {
                 font-size: 28px;
             }
-            #score, #level {
+            #score, #level, #timer {
                 font-size: 20px;
-                width: 80px;
+                width: 120px;
             }
             #restart-button, #play-next-level-btn {
                 font-size: 20px;
@@ -188,6 +189,7 @@
         let baseSpeed = 1;
         let currentScore = 0;
         let gameTimer;
+        let timerInterval;
 
         playPauseBtn.addEventListener('click', function() {
             if (backgroundMusic.paused) {
@@ -201,6 +203,7 @@
 
         function startGame() {
             document.getElementById('start-game-page').style.display = 'none';
+            backgroundMusic.currentTime = 0;
             backgroundMusic.play();
             initializeGame();
         }
@@ -223,6 +226,13 @@
                 const levelDisplay = document.createElement('div');
                 levelDisplay.id = 'level';
                 document.body.appendChild(levelDisplay);
+            }
+
+            const existingTimer = document.getElementById('timer');
+            if (!existingTimer) {
+                const timerDisplay = document.createElement('div');
+                timerDisplay.id = 'timer';
+                document.body.appendChild(timerDisplay);
             }
 
             const gun = document.createElement('div');
@@ -248,6 +258,13 @@
             function updateLevelDisplay() {
                 const levelElement = document.getElementById('level');
                 levelElement.textContent = `Level: ${level}`;
+            }
+
+            function updateTimerDisplay(timeLeft) {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                const timerElement = document.getElementById('timer');
+                timerElement.textContent = `Time: ${minutes}:${seconds.toString().padStart(2, '0')}`;
             }
 
             function getAngle(mouseX, mouseY) {
@@ -311,10 +328,21 @@
 
             function startFallingEmojis() {
                 createFallingEmoji(); 
-                gameTimer = setTimeout(endLevel, 30000); // 30 seconds per level
+                let timeLeft = 150; // 2.5 minutes in seconds
+                updateTimerDisplay(timeLeft);
+                
+                timerInterval = setInterval(() => {
+                    timeLeft--;
+                    updateTimerDisplay(timeLeft);
+                    if (timeLeft <= 0) {
+                        clearInterval(timerInterval);
+                        endLevel();
+                    }
+                }, 1000);
             }
 
             function endLevel() {
+                clearInterval(timerInterval);
                 emojiIntervals.forEach(interval => clearInterval(interval));
                 emojiIntervals = [];
 
@@ -343,6 +371,7 @@
             playNextLevelBtn.style.display = 'none';
             level++;
             baseSpeed *= 1.1; // Increase speed by 10% per level
+            backgroundMusic.currentTime = 0; // Restart the song
             initializeGame();
         });
 
@@ -351,6 +380,7 @@
             currentScore = 0;
             level = 1;
             baseSpeed = 1;
+            backgroundMusic.currentTime = 0; // Restart the song
             initializeGame();
         }
 
