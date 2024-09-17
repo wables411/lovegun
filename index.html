@@ -326,14 +326,6 @@ const backgroundMusic = document.getElementById('background-music');
                 progressBar.style.width = `${percentage}%`;
             }
 
-            function getAngle(mouseX, mouseY) {
-                const rect = gun.getBoundingClientRect();
-                const gunX = rect.left + rect.width / 2;
-                const gunY = rect.top + rect.height / 2;
-                const angle = Math.atan2(mouseY - gunY, mouseX - gunX) * (180 / Math.PI);
-                return angle;
-            }
-
             function createFallingEmoji() {
                 const emoji = document.createElement('div');
                 emoji.classList.add('falling-emoji');
@@ -355,35 +347,6 @@ const backgroundMusic = document.getElementById('background-music');
                 }, fallDuration);
 
                 emojiIntervals.push(emojiInterval);
-            }
-
-            function shootEmoji(event) {
-                const emoji = document.elementFromPoint(event.clientX, event.clientY);
-
-                if (emoji && emoji.classList.contains('falling-emoji')) {
-                    const rect = emoji.getBoundingClientRect();
-                    const heart = document.createElement('div');
-                    heart.classList.add('heart');
-                    heart.textContent = '♡';
-                    heart.style.left = `${rect.left}px`;
-                    heart.style.top = `${rect.top}px`;
-                    gameArea.appendChild(heart);
-
-                    emoji.remove();
-                    totalScore++;
-                    updateScoreDisplay();
-
-                    setTimeout(() => {
-                        if (heart.parentNode) {
-                            gameArea.removeChild(heart);
-                        }
-                    }, 1000);
-                }
-            }
-
-            function moveGun(event) {
-                const angle = getAngle(event.clientX, event.clientY);
-                gun.style.transform = `translateX(-50%) rotate(${angle}deg)`;
             }
 
             function startFallingEmojis() {
@@ -414,6 +377,47 @@ const backgroundMusic = document.getElementById('background-music');
             startFallingEmojis();
         }
 
+        function moveGun(event) {
+            const gun = document.querySelector('.gun');
+            if (gun) {
+                const angle = getAngle(event.clientX, event.clientY, gun);
+                gun.style.transform = `translateX(-50%) rotate(${angle}deg)`;
+            }
+        }
+
+        function shootEmoji(event) {
+            const emoji = document.elementFromPoint(event.clientX, event.clientY);
+            const gameArea = document.getElementById('game');
+
+            if (emoji && emoji.classList.contains('falling-emoji')) {
+                const rect = emoji.getBoundingClientRect();
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                heart.textContent = '♡';
+                heart.style.left = `${rect.left}px`;
+                heart.style.top = `${rect.top}px`;
+                gameArea.appendChild(heart);
+
+                emoji.remove();
+                totalScore++;
+                updateScoreDisplay();
+
+                setTimeout(() => {
+                    if (heart.parentNode) {
+                        gameArea.removeChild(heart);
+                    }
+                }, 1000);
+            }
+        }
+
+        function getAngle(mouseX, mouseY, gun) {
+            const rect = gun.getBoundingClientRect();
+            const gunX = rect.left + rect.width / 2;
+            const gunY = rect.top + rect.height / 2;
+            const angle = Math.atan2(mouseY - gunY, mouseX - gunX) * (180 / Math.PI);
+            return angle;
+        }
+
         function stopGame() {
             console.log("Stopping game and calling endLevel");
             clearTimeout(gameTimer);
@@ -424,7 +428,7 @@ const backgroundMusic = document.getElementById('background-music');
             backgroundMusic.currentTime = 0;
             document.removeEventListener('mousemove', moveGun);
             document.removeEventListener('click', shootEmoji);
-            endLevel();
+            setTimeout(endLevel, 100); // Add a small delay before calling endLevel
         }
 
         function endLevel() {
@@ -453,7 +457,9 @@ const backgroundMusic = document.getElementById('background-music');
         }
 
         function endGame() {
+            console.log("End game function called");
             showNotification(`Game Over! FINAL SCORE: ${totalScore} UwU!`);
+            
             setTimeout(() => {
                 const gameArea = document.getElementById('game');
                 if (gameArea) {
@@ -461,6 +467,9 @@ const backgroundMusic = document.getElementById('background-music');
                 }
                 document.getElementById('restart-button').style.display = 'block';
             }, 3000);
+
+            // Reset scores and increase difficulty for the next game
+            baseSpeed *= 1.2; // Increase the difficulty factor
         }
 
         playNextLevelBtn.addEventListener('click', () => {
@@ -474,10 +483,11 @@ const backgroundMusic = document.getElementById('background-music');
         });
 
         function restartGame() {
+            console.log("Restart game function called");
             document.getElementById('restart-button').style.display = 'none';
             totalScore = 0;
             level = 1;
-            baseSpeed = 1;
+            baseSpeed = 1; // Reset the base speed
             levelScores = [];
             backgroundMusic.currentTime = 0;
             initializeGame();
