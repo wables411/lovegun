@@ -214,7 +214,7 @@
         <div id="level-progress-bar"></div>
     </div>
 
-    <script>
+<script>
         const backgroundMusic = document.getElementById('background-music');
         const playPauseBtn = document.getElementById('play-pause-btn');
         const playNextLevelBtn = document.getElementById("play-next-level-btn");
@@ -226,7 +226,7 @@
         let timerInterval;
         let levelScores = [];
 
-        const emojis = ['😹', '🌽', '🤡', '🍊', '💉🧬', '🇹🇼', '🐶🔫', '🌎☮️', '🥩', '🐸', '🔥', '🎲', '🙂⛓️', '🇺🇸', '🥨', '🍆', '🍣', '🪲🧃', '🧠🤏 ', '🐡', '💸', '🐷', '🐤', '🌕', '🪨', '✂️', '📄', '✉️', '🦐', '🇨🇳', ' जीत', '🥧', '🌮', '💩', '👽', '🍉', '🍑', '🚀', '💀'];
+        const emojis = ['😹', '🌽', '🤡', '🍊', '💉🧬', '🇹🇼', '🐶🔫', '🔨', '🌎☮️', '🥩', '🐸', '🔥', '🎲', '🙂⛓️', '🇺🇸', '🥨', '🍆', '🍣', '🪲🧃', '🧠🤏 ', '🐡', '💸', '🐷', '🐤', '🌕', '🪨', '✂️', '📄', '✉️', '🦐', '🇨🇳', ' जीत', '🥧', '🌮', '💩', '👽', '🍉', '🍑', '🚀', '💀'];
 
         function updateScoreDisplay() {
             const paddedScore = totalScore.toString().padStart(3, '0');
@@ -265,9 +265,11 @@
             notification.style.display = 'block';
             notification.style.zIndex = '2000';
             console.log("Showing notification:", message);
-            setTimeout(() => {
-                notification.style.display = 'none';
-            }, 3000);
+        }
+
+        function hideNotification() {
+            const notification = document.getElementById('notification');
+            notification.style.display = 'none';
         }
 
         function startGame() {
@@ -286,6 +288,8 @@
             startFallingEmojis();
             document.addEventListener('mousemove', moveGun);
             document.addEventListener('click', shootEmoji);
+            backgroundMusic.currentTime = 0;
+            backgroundMusic.play();
         }
 
         function setupGameElements() {
@@ -414,7 +418,6 @@
             emojiIntervals.forEach(interval => clearTimeout(interval));
             emojiIntervals = [];
             backgroundMusic.pause();
-            backgroundMusic.currentTime = 0;
             document.removeEventListener('mousemove', moveGun);
             document.removeEventListener('click', shootEmoji);
             setTimeout(endLevel, 100);
@@ -434,12 +437,10 @@
             showNotification(`Wow! You love gunned down ${currentLevelScore} emojis this level!`);
 
             if (level < 10) {
-                setTimeout(() => {
-                    const playNextLevelBtn = document.getElementById('play-next-level-btn');
-                    if (playNextLevelBtn) {
-                        playNextLevelBtn.style.display = 'block';
-                    }
-                }, 3000);
+                const playNextLevelBtn = document.getElementById('play-next-level-btn');
+                if (playNextLevelBtn) {
+                    playNextLevelBtn.style.display = 'block';
+                }
             } else {
                 setTimeout(endGame, 3000);
             }
@@ -473,21 +474,24 @@
         playNextLevelBtn.addEventListener('click', () => {
             console.log("Next level button clicked");
             playNextLevelBtn.style.display = 'none';
+            hideNotification();
             level++;
             baseSpeed *= 1.1; // Increase speed by 10% each level
-            backgroundMusic.currentTime = 0;
             showNotification(`Get ready for Level ${level}!`);
-            setTimeout(initializeGame, 2000);
+            setTimeout(() => {
+                hideNotification();
+                initializeGame();
+            }, 2000);
         });
 
         function restartGame() {
             console.log("Restart game function called");
             document.getElementById('restart-button').style.display = 'none';
+            hideNotification();
             totalScore = 0;
             level = 1;
             baseSpeed = 1; // Reset the base speed
             levelScores = [];
-            backgroundMusic.currentTime = 0;
             initializeGame();
         }
 
