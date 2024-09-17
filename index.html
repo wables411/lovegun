@@ -116,7 +116,7 @@
             border-radius: 10px;
             background-color: #ff69b4;
             color: white;
-            z-index: 2;
+            z-index: 2000;
         }
         #restart-button:hover, #play-next-level-btn:hover {
             background-color: #ff85c2;
@@ -148,7 +148,8 @@
             border-radius: 10px;
             font-size: 24px;
             text-align: center;
-            z-index: 1000;
+            z-index: 2000;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
         }
         #level-progress {
             position: absolute;
@@ -165,15 +166,6 @@
             background-color: #ff69b4;
             border-radius: 5px;
             transition: width 0.5s;
-        }
-        .emoji-pop {
-            position: absolute;
-            font-size: 24px;
-            animation: pop 0.3s ease-out;
-        }
-        @keyframes pop {
-            0% { transform: scale(1); opacity: 1; }
-            100% { transform: scale(2); opacity: 0; }
         }
         @media screen and (max-width: 768px) {
             .gun {
@@ -223,7 +215,7 @@
     </div>
 
     <script>
-        const backgroundMusic = document.getElementById('background-music');
+const backgroundMusic = document.getElementById('background-music');
         const playPauseBtn = document.getElementById('play-pause-btn');
         const playNextLevelBtn = document.getElementById("play-next-level-btn");
         let emojiIntervals = [];
@@ -255,6 +247,8 @@
             const notification = document.getElementById('notification');
             notification.textContent = message;
             notification.style.display = 'block';
+            notification.style.zIndex = '2000';
+            console.log("Showing notification:", message);
             setTimeout(() => {
                 notification.style.display = 'none';
             }, 3000);
@@ -299,6 +293,9 @@
             } else {
                 gameArea.innerHTML = '';
             }
+
+            document.getElementById('play-next-level-btn').style.display = 'none';
+            document.getElementById('restart-button').style.display = 'none';
 
             updateScoreDisplay();
             updateLevelDisplay();
@@ -360,29 +357,29 @@
                 emojiIntervals.push(emojiInterval);
             }
 
-function shootEmoji(event) {
-    const emoji = document.elementFromPoint(event.clientX, event.clientY);
+            function shootEmoji(event) {
+                const emoji = document.elementFromPoint(event.clientX, event.clientY);
 
-    if (emoji && emoji.classList.contains('falling-emoji')) {
-        const rect = emoji.getBoundingClientRect();
-        const heart = document.createElement('div');
-        heart.classList.add('heart');
-        heart.textContent = '♡';
-        heart.style.left = `${rect.left}px`;
-        heart.style.top = `${rect.top}px`;
-        gameArea.appendChild(heart);
+                if (emoji && emoji.classList.contains('falling-emoji')) {
+                    const rect = emoji.getBoundingClientRect();
+                    const heart = document.createElement('div');
+                    heart.classList.add('heart');
+                    heart.textContent = '♡';
+                    heart.style.left = `${rect.left}px`;
+                    heart.style.top = `${rect.top}px`;
+                    gameArea.appendChild(heart);
 
-        emoji.remove();
-        totalScore++;
-        updateScoreDisplay();
+                    emoji.remove();
+                    totalScore++;
+                    updateScoreDisplay();
 
-        setTimeout(() => {
-            if (heart.parentNode) {
-                gameArea.removeChild(heart);
+                    setTimeout(() => {
+                        if (heart.parentNode) {
+                            gameArea.removeChild(heart);
+                        }
+                    }, 1000);
+                }
             }
-        }, 1000);
-    }
-}
 
             function moveGun(event) {
                 const angle = getAngle(event.clientX, event.clientY);
@@ -416,41 +413,44 @@ function shootEmoji(event) {
             document.addEventListener('click', shootEmoji);
             startFallingEmojis();
         }
+
         function stopGame() {
-    clearTimeout(gameTimer);
-    clearInterval(timerInterval);
-    emojiIntervals.forEach(interval => clearTimeout(interval));
-    emojiIntervals = [];
-    backgroundMusic.pause();
-    backgroundMusic.currentTime = 0;
-    document.removeEventListener('mousemove', moveGun);
-    document.removeEventListener('click', shootEmoji);
-    endLevel();
-}
+            console.log("Stopping game and calling endLevel");
+            clearTimeout(gameTimer);
+            clearInterval(timerInterval);
+            emojiIntervals.forEach(interval => clearTimeout(interval));
+            emojiIntervals = [];
+            backgroundMusic.pause();
+            backgroundMusic.currentTime = 0;
+            document.removeEventListener('mousemove', moveGun);
+            document.removeEventListener('click', shootEmoji);
+            endLevel();
+        }
 
-function endLevel() {
-    levelScores.push(totalScore);
-    const currentLevelScore = totalScore - (levelScores.length > 1 ? levelScores[levelScores.length - 2] : 0);
-    
-    // Ensure the game area is cleared
-    const gameArea = document.getElementById('game');
-    if (gameArea) {
-        gameArea.innerHTML = '';
-    }
-
-    showNotification(`Wow! You love gunned down ${currentLevelScore} emojis this level!`);
-
-    if (level < 10) {
-        setTimeout(() => {
-            const playNextLevelBtn = document.getElementById('play-next-level-btn');
-            if (playNextLevelBtn) {
-                playNextLevelBtn.style.display = 'block';
+        function endLevel() {
+            console.log("endLevel function called");
+            levelScores.push(totalScore);
+            const currentLevelScore = totalScore - (levelScores.length > 1 ? levelScores[levelScores.length - 2] : 0);
+            
+            const gameArea = document.getElementById('game');
+            if (gameArea) {
+                gameArea.innerHTML = '';
             }
-        }, 3000);
-    } else {
-        setTimeout(endGame, 3000);
-    }
-}
+
+            console.log("Showing end of level notification");
+            showNotification(`Wow! You love gunned down ${currentLevelScore} emojis this level!`);
+
+            if (level < 10) {
+                setTimeout(() => {
+                    const playNextLevelBtn = document.getElementById('play-next-level-btn');
+                    if (playNextLevelBtn) {
+                        playNextLevelBtn.style.display = 'block';
+                    }
+                }, 3000);
+            } else {
+                setTimeout(endGame, 3000);
+            }
+        }
 
         function endGame() {
             showNotification(`Game Over! FINAL SCORE: ${totalScore} UwU!`);
@@ -464,14 +464,13 @@ function endLevel() {
         }
 
         playNextLevelBtn.addEventListener('click', () => {
+            console.log("Next level button clicked");
             playNextLevelBtn.style.display = 'none';
             level++;
             baseSpeed *= 1.1; // Increase speed by 10% each level
             backgroundMusic.currentTime = 0;
-            setTimeout(() => {
-                showNotification(`Get ready for Level ${level}!`);
-                setTimeout(initializeGame, 2000);
-            }, 1000);
+            showNotification(`Get ready for Level ${level}!`);
+            setTimeout(initializeGame, 2000);
         });
 
         function restartGame() {
