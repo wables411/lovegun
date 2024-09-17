@@ -215,7 +215,7 @@
     </div>
 
     <script>
-const backgroundMusic = document.getElementById('background-music');
+        const backgroundMusic = document.getElementById('background-music');
         const playPauseBtn = document.getElementById('play-pause-btn');
         const playNextLevelBtn = document.getElementById("play-next-level-btn");
         let emojiIntervals = [];
@@ -226,21 +226,37 @@ const backgroundMusic = document.getElementById('background-music');
         let timerInterval;
         let levelScores = [];
 
-        playPauseBtn.addEventListener('click', function() {
-            if (backgroundMusic.paused) {
-                backgroundMusic.play();
-                playPauseBtn.textContent = '⏸️';
-            } else {
-                backgroundMusic.pause();
-                playPauseBtn.textContent = '▶️';
-            }
-        });
+        const emojis = ['😹', '🌽', '🤡', '🍊', '💉🧬', '🇹🇼', '🐶🔫', '🌎☮️', '🥩', '🐸', '🔥', '🎲', '🙂⛓️', '🇺🇸', '🥨', '🍆', '🍣', '🪲🧃', '🧠🤏 ', '🐡', '💸', '🐷', '🐤', '🌕', '🪨', '✂️', '📄', '✉️', '🦐', '🇨🇳', ' जीत', '🥧', '🌮', '💩', '👽', '🍉', '🍑', '🚀', '💀'];
 
-        function startGame() {
-            document.getElementById('start-game-page').style.display = 'none';
-            backgroundMusic.currentTime = 0;
-            backgroundMusic.play();
-            initializeGame();
+        function updateScoreDisplay() {
+            const paddedScore = totalScore.toString().padStart(3, '0');
+            const scoreElement = document.getElementById('score');
+            if (scoreElement) {
+                scoreElement.textContent = `Score: ${paddedScore}`;
+            }
+        }
+
+        function updateLevelDisplay() {
+            const levelElement = document.getElementById('level');
+            if (levelElement) {
+                levelElement.textContent = `Level: ${level}`;
+            }
+        }
+
+        function updateLevelProgress(percentage) {
+            const progressBar = document.getElementById('level-progress-bar');
+            if (progressBar) {
+                progressBar.style.width = `${percentage}%`;
+            }
+        }
+
+        function updateTimerDisplay(timeLeft) {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            const timerElement = document.getElementById('timer');
+            if (timerElement) {
+                timerElement.textContent = `Time: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }
         }
 
         function showNotification(message) {
@@ -254,32 +270,37 @@ const backgroundMusic = document.getElementById('background-music');
             }, 3000);
         }
 
+        function startGame() {
+            document.getElementById('start-game-page').style.display = 'none';
+            backgroundMusic.currentTime = 0;
+            backgroundMusic.play();
+            initializeGame();
+        }
+
         function initializeGame() {
+            setupGameElements();
+            emojiIntervals = [];
+            updateScoreDisplay();
+            updateLevelDisplay();
+            updateLevelProgress(0);
+            startFallingEmojis();
+            document.addEventListener('mousemove', moveGun);
+            document.addEventListener('click', shootEmoji);
+        }
+
+        function setupGameElements() {
             const existingGun = document.querySelector('.gun');
             if (existingGun) {
                 existingGun.remove();
             }
 
-            const existingScore = document.getElementById('score');
-            if (!existingScore) {
-                const score = document.createElement('div');
-                score.id = 'score';
-                document.body.appendChild(score);
-            }
-
-            const existingLevel = document.getElementById('level');
-            if (!existingLevel) {
-                const levelDisplay = document.createElement('div');
-                levelDisplay.id = 'level';
-                document.body.appendChild(levelDisplay);
-            }
-
-            const existingTimer = document.getElementById('timer');
-            if (!existingTimer) {
-                const timerDisplay = document.createElement('div');
-                timerDisplay.id = 'timer';
-                document.body.appendChild(timerDisplay);
-            }
+            ['score', 'level', 'timer'].forEach(id => {
+                if (!document.getElementById(id)) {
+                    const element = document.createElement('div');
+                    element.id = id;
+                    document.body.appendChild(element);
+                }
+            });
 
             const gun = document.createElement('div');
             gun.className = 'gun';
@@ -296,93 +317,53 @@ const backgroundMusic = document.getElementById('background-music');
 
             document.getElementById('play-next-level-btn').style.display = 'none';
             document.getElementById('restart-button').style.display = 'none';
-
-            updateScoreDisplay();
-            updateLevelDisplay();
-            updateLevelProgress(0);
-
-            const emojis = ['😹', '🌽', '🤡', '🍊', '💉🧬', '🇹🇼', '🐶🔫', '🌎☮️', '🥩', '🐸', '🔥', '🎲', '🙂⛓️', '🇺🇸', '🥨', '🍆', '🍣', '🪲🧃', '🧠🤏 ', '🐡', '💸', '🐷', '🐤', '🌕', '🪨', '✂️', '📄', '✉️', '🦐', '🇨🇳', ' जीत', '🥧', '🌮', '💩', '👽', '🍉', '🍑', '🚀', '💀'];
-
-            function updateScoreDisplay() {
-                const paddedScore = totalScore.toString().padStart(3, '0');
-                const scoreElement = document.getElementById('score');
-                scoreElement.textContent = `Score: ${paddedScore}`;
-            }
-
-            function updateLevelDisplay() {
-                const levelElement = document.getElementById('level');
-                levelElement.textContent = `Level: ${level}`;
-            }
-
-            function updateTimerDisplay(timeLeft) {
-                const minutes = Math.floor(timeLeft / 60);
-                const seconds = timeLeft % 60;
-                const timerElement = document.getElementById('timer');
-                timerElement.textContent = `Time: ${minutes}:${seconds.toString().padStart(2, '0')}`;
-            }
-
-            function updateLevelProgress(percentage) {
-                const progressBar = document.getElementById('level-progress-bar');
-                progressBar.style.width = `${percentage}%`;
-            }
-
-            function createFallingEmoji() {
-                const emoji = document.createElement('div');
-                emoji.classList.add('falling-emoji');
-                emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-                
-                const column = Math.floor(Math.random() * 10);
-                const leftPosition = column * 10 + Math.random() * 5;
-                emoji.style.left = `${leftPosition}%`;
-                
-                gameArea.appendChild(emoji);
-
-                const fallDuration = 6000 / baseSpeed;
-                emoji.style.animation = `fall ${fallDuration}ms linear`;
-
-                const emojiInterval = setTimeout(() => {
-                    if (emoji.parentNode) {
-                        gameArea.removeChild(emoji);
-                    }
-                }, fallDuration);
-
-                emojiIntervals.push(emojiInterval);
-            }
-
-            function startFallingEmojis() {
-                function createEmoji() {
-                    createFallingEmoji();
-                    const nextInterval = Math.random() * 800 + 400;
-                    emojiIntervals.push(setTimeout(createEmoji, nextInterval));
-                }
-                createEmoji();
-
-                let timeLeft = 150; // 2 minutes and 30 seconds
-                updateTimerDisplay(timeLeft);
-                
-                timerInterval = setInterval(() => {
-                    timeLeft--;
-                    updateTimerDisplay(timeLeft);
-                    updateLevelProgress((150 - timeLeft) / 150 * 100);
-                    if (timeLeft <= 0) {
-                        stopGame();
-                    }
-                }, 1000);
-
-                gameTimer = setTimeout(stopGame, 150000); // 2 minutes and 30 seconds
-            }
-
-            document.addEventListener('mousemove', moveGun);
-            document.addEventListener('click', shootEmoji);
-            startFallingEmojis();
         }
 
-        function moveGun(event) {
-            const gun = document.querySelector('.gun');
-            if (gun) {
-                const angle = getAngle(event.clientX, event.clientY, gun);
-                gun.style.transform = `translateX(-50%) rotate(${angle}deg)`;
+        function createFallingEmoji() {
+            const gameArea = document.getElementById('game');
+            const emoji = document.createElement('div');
+            emoji.classList.add('falling-emoji');
+            emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+            
+            const column = Math.floor(Math.random() * 10);
+            const leftPosition = column * 10 + Math.random() * 5;
+            emoji.style.left = `${leftPosition}%`;
+            
+            gameArea.appendChild(emoji);
+
+            const fallDuration = 6000 / baseSpeed;
+            emoji.style.animation = `fall ${fallDuration}ms linear`;
+
+            const emojiInterval = setTimeout(() => {
+                if (emoji.parentNode) {
+                    gameArea.removeChild(emoji);
+                }
+            }, fallDuration);
+
+            emojiIntervals.push(emojiInterval);
+        }
+
+        function startFallingEmojis() {
+            function createEmoji() {
+                createFallingEmoji();
+                const nextInterval = Math.random() * 800 + 400;
+                emojiIntervals.push(setTimeout(createEmoji, nextInterval));
             }
+            createEmoji();
+
+            let timeLeft = 150; // 2 minutes and 30 seconds
+            updateTimerDisplay(timeLeft);
+            
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay(timeLeft);
+                updateLevelProgress((150 - timeLeft) / 150 * 100);
+                if (timeLeft <= 0) {
+                    stopGame();
+                }
+            }, 1000);
+
+            gameTimer = setTimeout(stopGame, 150000); // 2 minutes and 30 seconds
         }
 
         function shootEmoji(event) {
@@ -410,6 +391,14 @@ const backgroundMusic = document.getElementById('background-music');
             }
         }
 
+        function moveGun(event) {
+            const gun = document.querySelector('.gun');
+            if (gun) {
+                const angle = getAngle(event.clientX, event.clientY, gun);
+                gun.style.transform = `translateX(-50%) rotate(${angle}deg)`;
+            }
+        }
+
         function getAngle(mouseX, mouseY, gun) {
             const rect = gun.getBoundingClientRect();
             const gunX = rect.left + rect.width / 2;
@@ -428,7 +417,7 @@ const backgroundMusic = document.getElementById('background-music');
             backgroundMusic.currentTime = 0;
             document.removeEventListener('mousemove', moveGun);
             document.removeEventListener('click', shootEmoji);
-            setTimeout(endLevel, 100); // Add a small delay before calling endLevel
+            setTimeout(endLevel, 100);
         }
 
         function endLevel() {
@@ -468,9 +457,18 @@ const backgroundMusic = document.getElementById('background-music');
                 document.getElementById('restart-button').style.display = 'block';
             }, 3000);
 
-            // Reset scores and increase difficulty for the next game
             baseSpeed *= 1.2; // Increase the difficulty factor
         }
+
+        playPauseBtn.addEventListener('click', function() {
+            if (backgroundMusic.paused) {
+                backgroundMusic.play();
+                playPauseBtn.textContent = '⏸️';
+            } else {
+                backgroundMusic.pause();
+                playPauseBtn.textContent = '▶️';
+            }
+        });
 
         playNextLevelBtn.addEventListener('click', () => {
             console.log("Next level button clicked");
