@@ -194,7 +194,7 @@
     <button id="restart-button" onclick="restartGame()">Play Again</button>
     <div id="notification"></div>
 
-    <script>
+<script>
         const backgroundMusic = document.getElementById('background-music');
         const playPauseBtn = document.getElementById('play-pause-btn');
         const playNextLevelBtn = document.getElementById("play-next-level-btn");
@@ -362,7 +362,7 @@
                 }
                 createEmoji();
 
-                let timeLeft = 150;
+                let timeLeft = 150; // 2 minutes and 30 seconds
                 updateTimerDisplay(timeLeft);
                 
                 timerInterval = setInterval(() => {
@@ -373,7 +373,7 @@
                     }
                 }, 1000);
 
-                gameTimer = setTimeout(stopGame, 150000);
+                gameTimer = setTimeout(stopGame, 150000); // 2 minutes and 30 seconds
             }
 
             document.addEventListener('mousemove', moveGun);
@@ -394,7 +394,7 @@
         }
 
         function endLevel() {
-            showNotification(`Wow! Your love gunned down ${totalScore} points so far!`);
+            showNotification(`omg wow! your love gunned down ${totalScore} points so far!`);
 
             if (level < 10) {
                 setTimeout(() => {
@@ -419,7 +419,7 @@
         playNextLevelBtn.addEventListener('click', () => {
             playNextLevelBtn.style.display = 'none';
             level++;
-            baseSpeed *= 1.1;
+            baseSpeed *= 1.1; // Increase speed by 10% each level
             backgroundMusic.currentTime = 0;
             initializeGame();
         });
