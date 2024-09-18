@@ -140,16 +140,18 @@
         #notification {
             display: none;
             position: fixed;
-            top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: rgba(255, 255, 255, 0.9);
+            transform: translateX(-50%);
+            background-color: black;
+            color: #ff69b4;
             padding: 20px;
             border-radius: 10px;
             font-size: 24px;
             text-align: center;
             z-index: 2000;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            box-shadow: 0 0 10px rgba(255,105,180,0.5);
+            width: 80%;
+            max-width: 400px;
         }
         #level-progress {
             position: absolute;
@@ -214,7 +216,7 @@
         <div id="level-progress-bar"></div>
     </div>
 
-<script>
+    <script>
         const backgroundMusic = document.getElementById('background-music');
         const playPauseBtn = document.getElementById('play-pause-btn');
         const playNextLevelBtn = document.getElementById("play-next-level-btn");
@@ -226,7 +228,7 @@
         let timerInterval;
         let levelScores = [];
 
-        const emojis = ['😹', '🌽', '🤡', '🍊', '💉🧬', '🇹🇼', '🐶🔫', '🔨', '🌎☮️', '🥩', '🐸', '🔥', '🎲', '🙂⛓️', '🇺🇸', '🥨', '🍆', '🍣', '🪲🧃', '🧠🤏 ', '🐡', '💸', '🐷', '🐤', '🌕', '🪨', '✂️', '📄', '✉️', '🦐', '🇨🇳', ' जीत', '🥧', '🌮', '💩', '👽', '🍉', '🍑', '🚀', '💀'];
+        const emojis = ['😹', '🌽', '🤡', '🍊', '💉🧬', '🇹🇼', '🐶🔫', '🌎☮️', '🥩', '🐸', '🔥', '🎲', '🙂⛓️', '🇺🇸', '🥨', '🍆', '🍣', '🪲🧃', '🧠🤏 ', '🐡', '💸', '🐷', '🐤', '🌕', '🪨', '✂️', '📄', '✉️', '🦐', '🇨🇳', ' जीत', '🥧', '🌮', '💩', '👽', '🍉', '🍑', '🚀', '💀'];
 
         function updateScoreDisplay() {
             const paddedScore = totalScore.toString().padStart(3, '0');
@@ -261,9 +263,22 @@
 
         function showNotification(message) {
             const notification = document.getElementById('notification');
+            const nextLevelBtn = document.getElementById('play-next-level-btn');
+            const restartButton = document.getElementById('restart-button');
+            
             notification.textContent = message;
             notification.style.display = 'block';
-            notification.style.zIndex = '2000';
+            
+            if (nextLevelBtn.style.display !== 'none') {
+                const btnRect = nextLevelBtn.getBoundingClientRect();
+                notification.style.bottom = `${window.innerHeight - btnRect.top + 20}px`;
+            } else if (restartButton.style.display !== 'none') {
+                const btnRect = restartButton.getBoundingClientRect();
+                notification.style.bottom = `${window.innerHeight - btnRect.top + 20}px`;
+            } else {
+                notification.style.bottom = '50%';
+            }
+            
             console.log("Showing notification:", message);
         }
 
@@ -355,7 +370,7 @@
             }
             createEmoji();
 
-            let timeLeft = 150; // 2 minutes and 30 seconds
+            let timeLeft = 150;
             updateTimerDisplay(timeLeft);
             
             timerInterval = setInterval(() => {
@@ -367,7 +382,7 @@
                 }
             }, 1000);
 
-            gameTimer = setTimeout(stopGame, 150000); // 2 minutes and 30 seconds
+            gameTimer = setTimeout(stopGame, 150000);
         }
 
         function shootEmoji(event) {
@@ -433,32 +448,29 @@
                 gameArea.innerHTML = '';
             }
 
-            console.log("Showing end of level notification");
-            showNotification(`Wow! You love gunned down ${currentLevelScore} emojis this level!`);
-
             if (level < 10) {
                 const playNextLevelBtn = document.getElementById('play-next-level-btn');
                 if (playNextLevelBtn) {
                     playNextLevelBtn.style.display = 'block';
+                    setTimeout(() => {
+                        showNotification(`Wow! You love gunned down ${currentLevelScore} emojis this level!`);
+                    }, 10);
                 }
             } else {
-                setTimeout(endGame, 3000);
+                endGame();
             }
         }
 
         function endGame() {
             console.log("End game function called");
-            showNotification(`Game Over! FINAL SCORE: ${totalScore} UwU!`);
-            
-            setTimeout(() => {
-                const gameArea = document.getElementById('game');
-                if (gameArea) {
-                    gameArea.innerHTML = '';
-                }
-                document.getElementById('restart-button').style.display = 'block';
-            }, 3000);
+            const restartButton = document.getElementById('restart-button');
+            restartButton.style.display = 'block';
 
-            baseSpeed *= 1.2; // Increase the difficulty factor
+            setTimeout(() => {
+                showNotification(`Game Over! FINAL SCORE: ${totalScore} UwU!`);
+            }, 10);
+
+            baseSpeed *= 1.2;
         }
 
         playPauseBtn.addEventListener('click', function() {
@@ -476,7 +488,7 @@
             playNextLevelBtn.style.display = 'none';
             hideNotification();
             level++;
-            baseSpeed *= 1.1; // Increase speed by 10% each level
+            baseSpeed *= 1.1;
             showNotification(`Get ready for Level ${level}!`);
             setTimeout(() => {
                 hideNotification();
@@ -490,7 +502,7 @@
             hideNotification();
             totalScore = 0;
             level = 1;
-            baseSpeed = 1; // Reset the base speed
+            baseSpeed = 1;
             levelScores = [];
             initializeGame();
         }
