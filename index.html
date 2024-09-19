@@ -129,17 +129,19 @@
             position: fixed;
             bottom: 10px;
             right: 10px;
-            font-size: 20px;
-            padding: 12px;
-            border: none;
-            border-radius: 50%;
-            background-color: #ff69b4;
-            color: white;
+            width: 40px;
+            height: 40px;
             cursor: url('crosshair.png') 16 16, auto;
             z-index: 2;
+            border-radius: 50%;
+            overflow: hidden;
+            padding: 0;
+            border: none;
+            background: none;
         }
         #home-button:hover {
-            background-color: #ff85c2;
+            transform: scale(1.1);
+            transition: transform 0.2s ease-in-out;
         }
         #notification {
             display: none;
@@ -218,7 +220,7 @@
         <button onclick="startGame()">Start Game</button>
     </div>
 
-    <button id="home-button" onclick="goToLinksPage()">🏠</button>
+    <img id="home-button" src="images/home.gif" alt="Home" onclick="goToLinksPage()">
     <button id="play-next-level-btn">Play Next Level</button>
     <button id="restart-button" onclick="restartGame()">Play Again</button>
     <div id="notification"></div>
@@ -227,7 +229,7 @@
     </div>
 
     <script>
-const backgroundMusic = document.getElementById('background-music');
+        const backgroundMusic = document.getElementById('background-music');
         const playPauseBtn = document.getElementById('play-pause-btn');
         const playNextLevelBtn = document.getElementById("play-next-level-btn");
         let emojiIntervals = [];
