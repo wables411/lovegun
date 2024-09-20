@@ -9,6 +9,13 @@ body, html {
     background-color: #ff69b4; /* Pink background */
 }
 
+body {
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+}
+
 #background-overlay {
     position: fixed;
     top: 0;
