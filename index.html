@@ -239,341 +239,342 @@
         <div id="level-progress-bar"></div>
     </div>
 <script>
-        const backgroundMusic = document.getElementById('background-music');
-        const playPauseBtn = document.getElementById('play-pause-btn');
-        const playNextLevelBtn = document.getElementById("play-next-level-btn");
-        let emojiIntervals = [];
-        let level = 1;
-        let baseSpeed = 1;
-        let totalScore = 0;
-        let gameTimer;
-        let timerInterval;
-        let levelScores = [];
+    const backgroundMusic = document.getElementById('background-music');
+    const playPauseBtn = document.getElementById('play-pause-btn');
+    const playNextLevelBtn = document.getElementById("play-next-level-btn");
+    let emojiIntervals = [];
+    let level = 1;
+    let baseSpeed = 1;
+    let totalScore = 0;
+    let gameTimer;
+    let timerInterval;
+    let levelScores = [];
 
-        const emojis = ['😹', '🌽', '🤡', '🍊', '💉🧬', '🇹🇼', '🐶🔫', '🌎☮️', '🥩', '🐸', '🔥', '🎲', '🙂⛓️', '🇺🇸', '🥨', '🔨', '🍆', '🍣', '🪲🧃', '🧠🤏 ', '🐡', '💸', '🐷', '🐤', '🌕', '🪨', '✂️', '📄', '✉️', '🦐', '🇨🇳', ' जीत', '🥧', '🌮', '💩', '👽', '🍉', '🍑', '🚀', '💀'];
+    const emojis = ['😹', '🌽', '🤡', '🍊', '💉🧬', '🇹🇼', '🐶🔫', '🌎☮️', '🥩', '🐸', '🔥', '🎲', '🙂⛓️', '🇺🇸', '🥨', '🔨', '🍆', '🍣', '🪲🧃', '🧠🤏 ', '🐡', '💸', '🐷', '🐤', '🌕', '🪨', '✂️', '📄', '✉️', '🦐', '🇨🇳', ' जीत', '🥧', '🌮', '💩', '👽', '🍉', '🍑', '🚀', '💀'];
 
-        function loadBackgroundOptions() {
-            const backgrounds = [
-                { name: 'Default (No Image)', url: '' },
-                { name: 'bg1', url: 'images/bg1.png' },
-                { name: 'bg2', url: 'images/bg2.png' },
-                { name: 'bg3', url: 'images/bg3.png' },
-                { name: 'bg4', url: 'images/bg4.png' },
-                { name: 'bg5', url: 'images/bg5.png' },
-                { name: 'bg6', url: 'images/bg6.png' },
-                { name: 'bg7', url: 'images/bg7.png' },
-                { name: 'bg8', url: 'images/bg8.png' },
-                { name: 'bg9', url: 'images/bg9.png' },
-                { name: 'bg10', url: 'images/bg10.png' },
-                // GIF options
-                { name: 'matrix uwu', url: 'images/lovegunmatrix.gif' },
-                { name: 'love guns', url: 'images/loveguns.gif' },
-                { name: 'epilepsy uwu', url: 'images/epilepsyuwu.gif' }
-            ];
+    function loadBackgroundOptions() {
+        const backgrounds = [
+            { name: 'Default (No Image)', url: '' },
+            { name: 'bg1', url: './images/bg1.png' },
+            { name: 'bg2', url: './images/bg2.png' },
+            { name: 'bg3', url: './images/bg3.png' },
+            { name: 'bg4', url: './images/bg4.png' },
+            { name: 'bg5', url: './images/bg5.png' },
+            { name: 'bg6', url: './images/bg6.png' },
+            { name: 'bg7', url: './images/bg7.png' },
+            { name: 'bg8', url: './images/bg8.png' },
+            { name: 'bg9', url: './images/bg9.png' },
+            { name: 'bg10', url: './images/bg10.png' },
+            // GIF options
+            { name: 'matrix uwu', url: './images/lovegunmatrix.gif' },
+            { name: 'love guns', url: './images/loveguns.gif' },
+            { name: 'epilepsy uwu', url: './images/epilepsyuwu.gif' }
+        ];
 
-            const selectBackground = document.getElementById('background-select');
-            backgrounds.forEach((bg, index) => {
-                const option = document.createElement('option');
-                option.value = bg.url;
-                option.textContent = bg.name;
-                selectBackground.appendChild(option);
-            });
+        const selectBackground = document.getElementById('background-select');
+        backgrounds.forEach((bg, index) => {
+            const option = document.createElement('option');
+            option.value = bg.url;
+            option.textContent = bg.name;
+            selectBackground.appendChild(option);
+        });
 
-            selectBackground.addEventListener('change', function() {
-                updateBackground(this.value);
-            });
+        selectBackground.addEventListener('change', function() {
+            updateBackground(this.value);
+        });
+    }
+
+    function updateBackground(imageUrl) {
+        console.log('Updating background with:', imageUrl); // Debugging line
+        document.body.style.setProperty('--bg-image', imageUrl ? `url('${imageUrl}')` : 'none');
+    }
+
+    function updateScoreDisplay() {
+        const paddedScore = totalScore.toString().padStart(3, '0');
+        const scoreElement = document.getElementById('score');
+        if (scoreElement) {
+            scoreElement.textContent = `Score: ${paddedScore}`;
+        }
+    }
+
+    function updateLevelDisplay() {
+        const levelElement = document.getElementById('level');
+        if (levelElement) {
+            levelElement.textContent = `Level: ${level}`;
+        }
+    }
+
+    function updateLevelProgress(percentage) {
+        const progressBar = document.getElementById('level-progress-bar');
+        if (progressBar) {
+            progressBar.style.width = `${percentage}%`;
+        }
+    }
+
+    function updateTimerDisplay(timeLeft) {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        const timerElement = document.getElementById('timer');
+        if (timerElement) {
+            timerElement.textContent = `Time: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+    }
+
+    function showNotification(message) {
+        const notification = document.getElementById('notification');
+        const nextLevelBtn = document.getElementById('play-next-level-btn');
+        const restartButton = document.getElementById('restart-button');
+        
+        notification.textContent = message;
+        notification.style.display = 'block';
+        
+        if (nextLevelBtn.style.display !== 'none') {
+            const btnRect = nextLevelBtn.getBoundingClientRect();
+            notification.style.bottom = `${window.innerHeight - btnRect.top + 20}px`;
+        } else if (restartButton.style.display !== 'none') {
+            const btnRect = restartButton.getBoundingClientRect();
+            notification.style.bottom = `${window.innerHeight - btnRect.top + 20}px`;
+        } else {
+            notification.style.bottom = '50%';
+        }
+        
+        console.log("Showing notification:", message);
+    }
+
+    function hideNotification() {
+        const notification = document.getElementById('notification');
+        notification.style.display = 'none';
+    }
+
+    function startGame() {
+        const selectedBackground = document.getElementById('background-select').value;
+        document.getElementById('start-game-page').style.display = 'none';
+        backgroundMusic.currentTime = 0;
+        backgroundMusic.play();
+        updateBackground(selectedBackground);
+        initializeGame();
+    }
+
+    function initializeGame() {
+        setupGameElements();
+        emojiIntervals = [];
+        updateScoreDisplay();
+        updateLevelDisplay();
+        updateLevelProgress(0);
+        startFallingEmojis();
+        document.addEventListener('mousemove', moveGun);
+        document.addEventListener('click', shootEmoji);
+        backgroundMusic.currentTime = 0;
+        backgroundMusic.play();
+    }
+
+    function setupGameElements() {
+        const existingGun = document.querySelector('.gun');
+        if (existingGun) {
+            existingGun.remove();
         }
 
-        function updateBackground(imageUrl) {
-            document.body.style.setProperty('--bg-image', imageUrl ? `url('${imageUrl}')` : 'none');
-        }
-
-        function updateScoreDisplay() {
-            const paddedScore = totalScore.toString().padStart(3, '0');
-            const scoreElement = document.getElementById('score');
-            if (scoreElement) {
-                scoreElement.textContent = `Score: ${paddedScore}`;
+        ['score', 'level', 'timer'].forEach(id => {
+            if (!document.getElementById(id)) {
+                const element = document.createElement('div');
+                element.id = id;
+                document.body.appendChild(element);
             }
+        });
+
+        const gun = document.createElement('div');
+        gun.className = 'gun';
+        gun.textContent = '▄︻デ══‐一';
+        document.body.appendChild(gun);
+
+        const gameArea = document.getElementById('game') || document.createElement('div');
+        if (!gameArea.id) {
+            gameArea.id = 'game';
+            document.body.appendChild(gameArea);
+        } else {
+            gameArea.innerHTML = '';
         }
 
-        function updateLevelDisplay() {
-            const levelElement = document.getElementById('level');
-            if (levelElement) {
-                levelElement.textContent = `Level: ${level}`;
+        document.getElementById('play-next-level-btn').style.display = 'none';
+        document.getElementById('restart-button').style.display = 'none';
+    }
+
+    function createFallingEmoji() {
+        const gameArea = document.getElementById('game');
+        const emoji = document.createElement('div');
+        emoji.classList.add('falling-emoji');
+        emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        
+        const column = Math.floor(Math.random() * 10);
+        const leftPosition = column * 10 + Math.random() * 5;
+        emoji.style.left = `${leftPosition}%`;
+        
+        gameArea.appendChild(emoji);
+
+        const fallDuration = 6000 / baseSpeed;
+        emoji.style.animation = `fall ${fallDuration}ms linear`;
+
+        const emojiInterval = setTimeout(() => {
+            if (emoji.parentNode) {
+                gameArea.removeChild(emoji);
             }
+        }, fallDuration);
+
+        emojiIntervals.push(emojiInterval);
+    }
+
+    function startFallingEmojis() {
+        function createEmoji() {
+            createFallingEmoji();
+            const nextInterval = Math.random() * 800 + 400;
+            emojiIntervals.push(setTimeout(createEmoji, nextInterval));
         }
+        createEmoji();
 
-        function updateLevelProgress(percentage) {
-            const progressBar = document.getElementById('level-progress-bar');
-            if (progressBar) {
-                progressBar.style.width = `${percentage}%`;
-            }
-        }
-
-        function updateTimerDisplay(timeLeft) {
-            const minutes = Math.floor(timeLeft / 60);
-            const seconds = timeLeft % 60;
-            const timerElement = document.getElementById('timer');
-            if (timerElement) {
-                timerElement.textContent = `Time: ${minutes}:${seconds.toString().padStart(2, '0')}`;
-            }
-        }
-
-        function showNotification(message) {
-            const notification = document.getElementById('notification');
-            const nextLevelBtn = document.getElementById('play-next-level-btn');
-            const restartButton = document.getElementById('restart-button');
-            
-            notification.textContent = message;
-            notification.style.display = 'block';
-            
-            if (nextLevelBtn.style.display !== 'none') {
-                const btnRect = nextLevelBtn.getBoundingClientRect();
-                notification.style.bottom = `${window.innerHeight - btnRect.top + 20}px`;
-            } else if (restartButton.style.display !== 'none') {
-                const btnRect = restartButton.getBoundingClientRect();
-                notification.style.bottom = `${window.innerHeight - btnRect.top + 20}px`;
-            } else {
-                notification.style.bottom = '50%';
-            }
-            
-            console.log("Showing notification:", message);
-        }
-
-        function hideNotification() {
-            const notification = document.getElementById('notification');
-            notification.style.display = 'none';
-        }
-
-        function startGame() {
-            const selectedBackground = document.getElementById('background-select').value;
-            document.getElementById('start-game-page').style.display = 'none';
-            backgroundMusic.currentTime = 0;
-            backgroundMusic.play();
-            updateBackground(selectedBackground);
-            initializeGame();
-        }
-
-        function initializeGame() {
-            setupGameElements();
-            emojiIntervals = [];
-            updateScoreDisplay();
-            updateLevelDisplay();
-            updateLevelProgress(0);
-            startFallingEmojis();
-            document.addEventListener('mousemove', moveGun);
-            document.addEventListener('click', shootEmoji);
-            backgroundMusic.currentTime = 0;
-            backgroundMusic.play();
-        }
-
-        function setupGameElements() {
-            const existingGun = document.querySelector('.gun');
-            if (existingGun) {
-                existingGun.remove();
-            }
-
-            ['score', 'level', 'timer'].forEach(id => {
-                if (!document.getElementById(id)) {
-                    const element = document.createElement('div');
-                    element.id = id;
-                    document.body.appendChild(element);
-                }
-            });
-
-            const gun = document.createElement('div');
-            gun.className = 'gun';
-            gun.textContent = '▄︻デ══‐一';
-            document.body.appendChild(gun);
-
-            const gameArea = document.getElementById('game') || document.createElement('div');
-            if (!gameArea.id) {
-                gameArea.id = 'game';
-                document.body.appendChild(gameArea);
-            } else {
-                gameArea.innerHTML = '';
-            }
-
-            document.getElementById('play-next-level-btn').style.display = 'none';
-            document.getElementById('restart-button').style.display = 'none';
-        }
-
-        function createFallingEmoji() {
-            const gameArea = document.getElementById('game');
-            const emoji = document.createElement('div');
-            emoji.classList.add('falling-emoji');
-            emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-            
-            const column = Math.floor(Math.random() * 10);
-            const leftPosition = column * 10 + Math.random() * 5;
-            emoji.style.left = `${leftPosition}%`;
-            
-            gameArea.appendChild(emoji);
-
-            const fallDuration = 6000 / baseSpeed;
-            emoji.style.animation = `fall ${fallDuration}ms linear`;
-
-            const emojiInterval = setTimeout(() => {
-                if (emoji.parentNode) {
-                    gameArea.removeChild(emoji);
-                }
-            }, fallDuration);
-
-            emojiIntervals.push(emojiInterval);
-        }
-
-        function startFallingEmojis() {
-            function createEmoji() {
-                createFallingEmoji();
-                const nextInterval = Math.random() * 800 + 400;
-                emojiIntervals.push(setTimeout(createEmoji, nextInterval));
-            }
-            createEmoji();
-
-            let timeLeft = 150;
+        let timeLeft = 150;
+        updateTimerDisplay(timeLeft);
+        
+        timerInterval = setInterval(() => {
+            timeLeft--;
             updateTimerDisplay(timeLeft);
-            
-            timerInterval = setInterval(() => {
-                timeLeft--;
-                updateTimerDisplay(timeLeft);
-                updateLevelProgress((150 - timeLeft) / 150 * 100);
-                if (timeLeft <= 0) {
-                    stopGame();
+            updateLevelProgress((150 - timeLeft) / 150 * 100);
+            if (timeLeft <= 0) {
+                stopGame();
+            }
+        }, 1000);
+
+        gameTimer = setTimeout(stopGame, 150000);
+    }
+
+    function shootEmoji(event) {
+        const emoji = document.elementFromPoint(event.clientX, event.clientY);
+        const gameArea = document.getElementById('game');
+
+        if (emoji && emoji.classList.contains('falling-emoji')) {
+            const rect = emoji.getBoundingClientRect();
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.textContent = '♡';
+            heart.style.left = `${rect.left}px`;
+            heart.style.top = `${rect.top}px`;
+            gameArea.appendChild(heart);
+
+            emoji.remove();
+            totalScore++;
+            updateScoreDisplay();
+
+            setTimeout(() => {
+                if (heart.parentNode) {
+                    gameArea.removeChild(heart);
                 }
             }, 1000);
+        }
+    }
 
-            gameTimer = setTimeout(stopGame, 150000);
+    function moveGun(event) {
+        const gun = document.querySelector('.gun');
+        if (gun) {
+            const angle = getAngle(event.clientX, event.clientY, gun);
+            gun.style.transform = `translateX(-50%) rotate(${angle}deg)`;
+        }
+    }
+
+    function getAngle(mouseX, mouseY, gun) {
+        const rect = gun.getBoundingClientRect();
+        const gunX = rect.left + rect.width / 2;
+        const gunY = rect.top + rect.height / 2;
+        const angle = Math.atan2(mouseY - gunY, mouseX - gunX) * (180 / Math.PI);
+        return angle;
+    }
+
+    function stopGame() {
+        console.log("Stopping game and calling endLevel");
+        clearTimeout(gameTimer);
+        clearInterval(timerInterval);
+        emojiIntervals.forEach(interval => clearTimeout(interval));
+        emojiIntervals = [];
+        backgroundMusic.pause();
+        document.removeEventListener('mousemove', moveGun);
+        document.removeEventListener('click', shootEmoji);
+        setTimeout(endLevel, 100);
+    }
+
+    function endLevel() {
+        console.log("endLevel function called");
+        levelScores.push(totalScore);
+        const currentLevelScore = totalScore - (levelScores.length > 1 ? levelScores[levelScores.length - 2] : 0);
+        
+        const gameArea = document.getElementById('game');
+        if (gameArea) {
+            gameArea.innerHTML = '';
         }
 
-        function shootEmoji(event) {
-            const emoji = document.elementFromPoint(event.clientX, event.clientY);
-            const gameArea = document.getElementById('game');
-
-            if (emoji && emoji.classList.contains('falling-emoji')) {
-                const rect = emoji.getBoundingClientRect();
-                const heart = document.createElement('div');
-                heart.classList.add('heart');
-                heart.textContent = '♡';
-                heart.style.left = `${rect.left}px`;
-                heart.style.top = `${rect.top}px`;
-                gameArea.appendChild(heart);
-
-                emoji.remove();
-                totalScore++;
-                updateScoreDisplay();
-
+        if (level < 10) {
+            const playNextLevelBtn = document.getElementById('play-next-level-btn');
+            if (playNextLevelBtn) {
+                playNextLevelBtn.style.display = 'block';
                 setTimeout(() => {
-                    if (heart.parentNode) {
-                        gameArea.removeChild(heart);
-                    }
-                }, 1000);
+                    showNotification(`🦄 𝓸𝓶𝓰 𝔀𝓸𝔀! 𝓾𝓻 𝓵𝓸𝓿𝓮 𝓰𝓾𝓷𝓷𝓮𝓭 𝓭𝓸𝔀𝓷 ${currentLevelScore} 𝓶𝓮𝓶𝓸𝓳𝓲𝓼 𝓤𝔀𝓤! 🦄`);
+                }, 10);
             }
+        } else {
+            endGame();
         }
+    }
 
-        function moveGun(event) {
-            const gun = document.querySelector('.gun');
-            if (gun) {
-                const angle = getAngle(event.clientX, event.clientY, gun);
-                gun.style.transform = `translateX(-50%) rotate(${angle}deg)`;
-            }
-        }
+    function endGame() {
+        console.log("End game function called");
+        const restartButton = document.getElementById('restart-button');
+        restartButton.style.display = 'block';
 
-        function getAngle(mouseX, mouseY, gun) {
-            const rect = gun.getBoundingClientRect();
-            const gunX = rect.left + rect.width / 2;
-            const gunY = rect.top + rect.height / 2;
-            const angle = Math.atan2(mouseY - gunY, mouseX - gunX) * (180 / Math.PI);
-            return angle;
-        }
+        setTimeout(() => {
+            showNotification(`Game Over! FINAL SCORE: ${totalScore} UwU!`);
+        }, 10);
 
-        function stopGame() {
-            console.log("Stopping game and calling endLevel");
-            clearTimeout(gameTimer);
-            clearInterval(timerInterval);
-            emojiIntervals.forEach(interval => clearTimeout(interval));
-            emojiIntervals = [];
+        baseSpeed *= 1.2;
+    }
+
+    playPauseBtn.addEventListener('click', function() {
+        if (backgroundMusic.paused) {
+            backgroundMusic.play();
+            playPauseBtn.textContent = '⏸️';
+        } else {
             backgroundMusic.pause();
-            document.removeEventListener('mousemove', moveGun);
-            document.removeEventListener('click', shootEmoji);
-            setTimeout(endLevel, 100);
+            playPauseBtn.textContent = '▶️';
         }
+    });
 
-        function endLevel() {
-            console.log("endLevel function called");
-            levelScores.push(totalScore);
-            const currentLevelScore = totalScore - (levelScores.length > 1 ? levelScores[levelScores.length - 2] : 0);
-            
-            const gameArea = document.getElementById('game');
-            if (gameArea) {
-                gameArea.innerHTML = '';
-            }
-
-            if (level < 10) {
-                const playNextLevelBtn = document.getElementById('play-next-level-btn');
-                if (playNextLevelBtn) {
-                    playNextLevelBtn.style.display = 'block';
-                    setTimeout(() => {
-                        showNotification(`🦄 𝓸𝓶𝓰 𝔀𝓸𝔀! 𝓾𝓻 𝓵𝓸𝓿𝓮 𝓰𝓾𝓷𝓷𝓮𝓭 𝓭𝓸𝔀𝓷 ${currentLevelScore} 𝓶𝓮𝓶𝓸𝓳𝓲𝓼 𝓤𝔀𝓤! 🦄`);
-                    }, 10);
-                }
-            } else {
-                endGame();
-            }
-        }
-
-        function endGame() {
-            console.log("End game function called");
-            const restartButton = document.getElementById('restart-button');
-            restartButton.style.display = 'block';
-
-            setTimeout(() => {
-                showNotification(`Game Over! FINAL SCORE: ${totalScore} UwU!`);
-            }, 10);
-
-            baseSpeed *= 1.2;
-        }
-
-        playPauseBtn.addEventListener('click', function() {
-            if (backgroundMusic.paused) {
-                backgroundMusic.play();
-                playPauseBtn.textContent = '⏸️';
-            } else {
-                backgroundMusic.pause();
-                playPauseBtn.textContent = '▶️';
-            }
-        });
-
-        playNextLevelBtn.addEventListener('click', () => {
-            console.log("Next level button clicked");
-            playNextLevelBtn.style.display = 'none';
+    playNextLevelBtn.addEventListener('click', () => {
+        console.log("Next level button clicked");
+        playNextLevelBtn.style.display = 'none';
+        hideNotification();
+        level++;
+        baseSpeed *= 1.1;
+        showNotification(`Get ready for Level ${level}!`);
+        setTimeout(() => {
             hideNotification();
-            level++;
-            baseSpeed *= 1.1;
-            showNotification(`Get ready for Level ${level}!`);
-            setTimeout(() => {
-                hideNotification();
-                initializeGame();
-            }, 2000);
-        });
-
-        function restartGame() {
-            console.log("Restart game function called");
-            document.getElementById('restart-button').style.display = 'none';
-            hideNotification();
-            totalScore = 0;
-            level = 1;
-            baseSpeed = 1;
-            levelScores = [];
             initializeGame();
-        }
+        }, 2000);
+    });
 
-        function goToLinksPage() {
-            window.location.href = 'https://lovegun.xyz';
-        }
+    function restartGame() {
+        console.log("Restart game function called");
+        document.getElementById('restart-button').style.display = 'none';
+        hideNotification();
+        totalScore = 0;
+        level = 1;
+        baseSpeed = 1;
+        levelScores = [];
+        initializeGame();
+    }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            loadBackgroundOptions();
-        });
-    </script>
+    function goToLinksPage() {
+        window.location.href = 'https://lovegun.xyz';
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadBackgroundOptions();
+    });
+</script>
 </body>
 </html>
