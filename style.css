@@ -9,18 +9,10 @@ body, html {
     cursor: url('crosshair.png') 16 16, auto;
 }
 
-body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: var(--bg-image, none) !important;
-    background-size: contain !important;
-    background-repeat: no-repeat !important;
-    background-position: center center !important;
-    z-index: -1;
+body {
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
 }
 
 #game-page, #start-game-page {
