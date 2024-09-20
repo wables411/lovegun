@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Love Gun</title>
+    <meta http-equiv="Content-Security-Policy" content="img-src 'self' data:; default-src 'self'">
     <style>
         body, html {
             margin: 0;
@@ -22,10 +23,10 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-image: var(--bg-image, none);
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center center;
+            background-image: var(--bg-image, none) !important;
+            background-size: contain !important;
+            background-repeat: no-repeat !important;
+            background-position: center center !important;
             z-index: -1;
         }
         #game-page, #start-game-page {
@@ -253,22 +254,23 @@
     const emojis = ['😹', '🌽', '🤡', '🍊', '💉🧬', '🇹🇼', '🐶🔫', '🌎☮️', '🥩', '🐸', '🔥', '🎲', '🙂⛓️', '🇺🇸', '🥨', '🔨', '🍆', '🍣', '🪲🧃', '🧠🤏 ', '🐡', '💸', '🐷', '🐤', '🌕', '🪨', '✂️', '📄', '✉️', '🦐', '🇨🇳', ' जीत', '🥧', '🌮', '💩', '👽', '🍉', '🍑', '🚀', '💀'];
 
     function loadBackgroundOptions() {
+        const basePath = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
         const backgrounds = [
             { name: 'Default (No Image)', url: '' },
-            { name: 'bg1', url: './images/bg1.png' },
-            { name: 'bg2', url: './images/bg2.png' },
-            { name: 'bg3', url: './images/bg3.png' },
-            { name: 'bg4', url: './images/bg4.png' },
-            { name: 'bg5', url: './images/bg5.png' },
-            { name: 'bg6', url: './images/bg6.png' },
-            { name: 'bg7', url: './images/bg7.png' },
-            { name: 'bg8', url: './images/bg8.png' },
-            { name: 'bg9', url: './images/bg9.png' },
-            { name: 'bg10', url: './images/bg10.png' },
+            { name: 'bg1', url: basePath + 'images/bg1.png' },
+            { name: 'bg2', url: basePath + 'images/bg2.png' },
+            { name: 'bg3', url: basePath + 'images/bg3.png' },
+            { name: 'bg4', url: basePath + 'images/bg4.png' },
+            { name: 'bg5', url: basePath + 'images/bg5.png' },
+            { name: 'bg6', url: basePath + 'images/bg6.png' },
+            { name: 'bg7', url: basePath + 'images/bg7.png' },
+            { name: 'bg8', url: basePath + 'images/bg8.png' },
+            { name: 'bg9', url: basePath + 'images/bg9.png' },
+            { name: 'bg10', url: basePath + 'images/bg10.png' },
             // GIF options
-            { name: 'matrix uwu', url: './images/lovegunmatrix.gif' },
-            { name: 'love guns', url: './images/loveguns.gif' },
-            { name: 'epilepsy uwu', url: './images/epilepsyuwu.gif' }
+            { name: 'matrix uwu', url: basePath + 'images/lovegunmatrix.gif' },
+            { name: 'love guns', url: basePath + 'images/loveguns.gif' },
+            { name: 'epilepsy uwu', url: basePath + 'images/epilepsyuwu.gif' }
         ];
 
         const selectBackground = document.getElementById('background-select');
@@ -285,8 +287,21 @@
     }
 
     function updateBackground(imageUrl) {
-        console.log('Updating background with:', imageUrl); // Debugging line
-        document.body.style.setProperty('--bg-image', imageUrl ? `url('${imageUrl}')` : 'none');
+        console.log('Updating background with:', imageUrl);
+        if (imageUrl) {
+            const img = new Image();
+            img.onload = function() {
+                console.log('Image loaded successfully:', imageUrl);
+                document.body.style.setProperty('--bg-image', `url('${imageUrl}')`);
+            };
+            img.onerror = function() {
+                console.error('Error loading image:', imageUrl);
+                document.body.style.setProperty('--bg-image', 'none');
+            };
+            img.src = imageUrl;
+        } else {
+            document.body.style.setProperty('--bg-image', 'none');
+        }
     }
 
     function updateScoreDisplay() {
