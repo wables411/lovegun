@@ -40,36 +40,36 @@
 
     const emojis = ['😹', '🌽', '🤡', '🍊', '💉🧬', '🇹🇼', '🐶🔫', '🌎☮️', '🥩', '🐸', '🔥', '🎲', '🙂⛓️', '🇺🇸', '🥨', '🔨', '🍆', '🍣', '🪲🧃', '🧠🤏 ', '🐡', '💸', '🐷', '🐤', '🌕', '🪨', '✂️', '📄', '✉️', '🦐', '🇨🇳', ' जीत', '🥧', '🌮', '💩', '👽', '🍉', '🍑', '🚀', '💀'];
 
-    function loadBackgroundOptions() {
-        const backgrounds = [
-            { name: 'Default (Pink)', url: '' },
-            { name: 'Background 1', url: 'images/bg1.png' },
-            { name: 'Background 2', url: 'images/bg2.png' },
-            { name: 'Background 3', url: 'images/bg3.png' },
-            { name: 'Background 4', url: 'images/bg4.png' },
-            { name: 'Background 5', url: 'images/bg5.png' },
-            { name: 'Background 6', url: 'images/bg6.png' },
-            { name: 'Background 7', url: 'images/bg7.png' },
-            { name: 'Background 8', url: 'images/bg8.png' },
-            { name: 'Background 9', url: 'images/bg9.png' },
-            { name: 'Background 10', url: 'images/bg10.png' },
-            { name: 'Animated Background 1', url: 'images/loveguns.gif' },
-            { name: 'Animated Background 2', url: 'images/lovegunmatrix.gif' },
-            { name: 'Animated Background 3', url: 'images/epilepsyuwu.gif' }
-        ];
+function loadBackgroundOptions() {
+    const backgrounds = [
+        { name: 'Default (Pink)', url: '' },
+        { name: '🤍', url: 'images/bg1.png' },
+        { name: 'L', url: 'images/bg2.png' },
+        { name: 'O', url: 'images/bg3.png' },
+        { name: 'V', url: 'images/bg4.png' },
+        { name: 'E', url: 'images/bg5.png' },
+        { name: '🤍', url: 'images/bg6.png' },
+        { name: 'G', url: 'images/bg7.png' },
+        { name: 'U', url: 'images/bg8.png' },
+        { name: 'N', url: 'images/bg9.png' },
+        { name: '🤍', url: 'images/bg10.png' },
+        { name: 'Pew Pew', url: 'images/loveguns.gif' },
+        { name: 'Matrix UwU', url: 'images/lovegunmatrix.gif' },
+        { name: 'Do Not Click This UwU', url: 'images/epilepsyuwu.gif' }
+    ];
 
-        const selectBackground = document.getElementById('background-select');
-        backgrounds.forEach((bg, index) => {
-            const option = document.createElement('option');
-            option.value = bg.url;
-            option.textContent = bg.name;
-            selectBackground.appendChild(option);
-        });
+    const selectBackground = document.getElementById('background-select');
+    backgrounds.forEach((bg, index) => {
+        const option = document.createElement('option');
+        option.value = bg.url;
+        option.textContent = bg.name;
+        selectBackground.appendChild(option);
+    });
 
-        selectBackground.addEventListener('change', function() {
-            updateBackground(this.value);
-        });
-    }
+    selectBackground.addEventListener('change', function() {
+        updateBackground(this.value);
+    });
+}
 
     function updateBackground(imageUrl) {
         console.log('Updating background with:', imageUrl);
