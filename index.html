@@ -8,18 +8,18 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="audio-controls">
-        <button id="play-pause-btn">⏸️</button>
-    </div>
+    <div id="background-overlay"></div>
+    
+    <button id="play-pause-btn">⏸️</button>
+    <img id="home-button" src="images/home.gif" alt="Home" onclick="goToLinksPage()">
 
     <audio id="background-music" src="NIGHTCORE Love Gun.mp3" loop></audio>
 
     <div id="start-game-page">
-        <select id="background-select"></select>
+        <select id="overlay-select"></select>
         <button onclick="startGame()">Start Game</button>
     </div>
 
-    <img id="home-button" src="images/home.gif" alt="Home" onclick="goToLinksPage()">
     <button id="play-next-level-btn">Play Next Level</button>
     <button id="restart-button" onclick="restartGame()">Play Again</button>
     <div id="notification"></div>
@@ -40,37 +40,32 @@
 
     const emojis = ['😹', '🌽', '🤡', '🍊', '💉🧬', '🇹🇼', '🐶🔫', '🌎☮️', '🥩', '🐸', '🔥', '🎲', '🙂⛓️', '🇺🇸', '🥨', '🔨', '🍆', '🍣', '🪲🧃', '🧠🤏 ', '🐡', '💸', '🐷', '🐤', '🌕', '🪨', '✂️', '📄', '✉️', '🦐', '🇨🇳', ' जीत', '🥧', '🌮', '💩', '👽', '🍉', '🍑', '🚀', '💀'];
 
-    function loadBackgroundOptions() {
-        const backgrounds = [
-            { name: 'Default (No Image)', url: '' },
-            { name: 'Background 1', url: 'images/bg1.png' },
-            { name: 'Background 2', url: 'images/bg2.png' },
-            { name: 'Background 3', url: 'images/bg3.png' },
-            { name: 'Background 4', url: 'images/bg4.png' },
-            { name: 'Background 5', url: 'images/bg5.png' },
-            { name: 'Background 6', url: 'images/bg6.png' },
-            { name: 'Background 7', url: 'images/bg7.png' },
-            { name: 'Background 8', url: 'images/bg8.png' },
-            { name: 'Background 9', url: 'images/bg9.png' },
-            { name: 'Background 10', url: 'images/bg10.png' }
+    function loadOverlayOptions() {
+        const overlays = [
+            { name: 'Default (No Overlay)', url: '' },
+            { name: 'Overlay 1', url: 'images/overlay1.png' },
+            { name: 'Overlay 2', url: 'images/overlay2.png' },
+            { name: 'Overlay 3', url: 'images/overlay3.gif' },
+            // Add more overlay options as needed
         ];
 
-        const selectBackground = document.getElementById('background-select');
-        backgrounds.forEach((bg, index) => {
+        const selectOverlay = document.getElementById('overlay-select');
+        overlays.forEach((overlay, index) => {
             const option = document.createElement('option');
-            option.value = bg.url;
-            option.textContent = bg.name;
-            selectBackground.appendChild(option);
+            option.value = overlay.url;
+            option.textContent = overlay.name;
+            selectOverlay.appendChild(option);
         });
 
-        selectBackground.addEventListener('change', function() {
-            updateBackground(this.value);
+        selectOverlay.addEventListener('change', function() {
+            updateOverlay(this.value);
         });
     }
 
-    function updateBackground(imageUrl) {
-        console.log('Updating background with:', imageUrl);
-        document.body.style.backgroundImage = imageUrl ? `url('${imageUrl}')` : 'none';
+    function updateOverlay(imageUrl) {
+        console.log('Updating overlay with:', imageUrl);
+        const overlay = document.getElementById('background-overlay');
+        overlay.style.backgroundImage = imageUrl ? `url('${imageUrl}')` : 'none';
     }
 
     function updateScoreDisplay() {
@@ -131,15 +126,14 @@
     }
 
     function startGame() {
-        const selectedBackground = document.getElementById('background-select').value;
+        const selectedOverlay = document.getElementById('overlay-select').value;
         document.getElementById('start-game-page').style.display = 'none';
         backgroundMusic.currentTime = 0;
         backgroundMusic.play();
-        updateBackground(selectedBackground);
+        updateOverlay(selectedOverlay);
         initializeGame();
     }
-
-    function initializeGame() {
+function initializeGame() {
         setupGameElements();
         emojiIntervals = [];
         updateScoreDisplay();
@@ -357,7 +351,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        loadBackgroundOptions();
+        loadOverlayOptions();
     });
 </script>
 </body>
