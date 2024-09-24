@@ -4,15 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Love Gun</title>
-    <meta http-equiv="Content-Security-Policy" content="img-src 'self' data:; default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'">
+    <meta http-equiv="Content-Security-Policy" content="img-src 'self' data:; default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; media-src 'self'">
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <style>
+        #intermission-video {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            max-width: 90%;
+            max-height: 90%;
+        }
+    </style>
 </head>
 <body>
     <button id="play-pause-btn">⏸️</button>
     <img id="home-button" src="images/home.gif" alt="Home" onclick="goToLinksPage()">
 
     <audio id="background-music" src="NIGHTCORE Love Gun.mp3" loop></audio>
+    <video id="intermission-video" src="images/intermission.mp4"></video>
 
     <div id="start-game-page">
         <select id="background-select"></select>
@@ -30,6 +43,7 @@
     const backgroundMusic = document.getElementById('background-music');
     const playPauseBtn = document.getElementById('play-pause-btn');
     const playNextLevelBtn = document.getElementById("play-next-level-btn");
+    const intermissionVideo = document.getElementById('intermission-video');
     let emojiIntervals = [];
     let level = 1;
     let baseSpeed = 1;
@@ -190,8 +204,7 @@ function loadBackgroundOptions() {
         document.getElementById('play-next-level-btn').style.display = 'none';
         document.getElementById('restart-button').style.display = 'none';
     }
-
-    function createFallingEmoji() {
+function createFallingEmoji() {
         const gameArea = document.getElementById('game');
         const emoji = document.createElement('div');
         emoji.classList.add('falling-emoji');
@@ -307,11 +320,21 @@ function loadBackgroundOptions() {
                 playNextLevelBtn.style.display = 'block';
                 setTimeout(() => {
                     showNotification(`🦄 𝓸𝓶𝓰 𝔀𝓸𝔀! 𝓾𝓻 𝓵𝓸𝓿𝓮 𝓰𝓾𝓷𝓷𝓮𝓭 𝓭𝓸𝔀𝓷 ${currentLevelScore} 𝓶𝓮𝓶𝓸𝓳𝓲𝓼 𝓤𝔀𝓤! 🦄`);
+                    playIntermissionVideo();
                 }, 10);
             }
         } else {
             endGame();
         }
+    }
+
+    function playIntermissionVideo() {
+        intermissionVideo.style.display = 'block';
+        intermissionVideo.play();
+
+        intermissionVideo.onended = () => {
+            intermissionVideo.style.display = 'none';
+        };
     }
 
     function endGame() {
