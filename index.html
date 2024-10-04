@@ -18,9 +18,27 @@
             max-width: 90%;
             max-height: 90%;
         }
+        .small-header {
+            font-size: 24px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .disclaimer {
+            font-size: 12px;
+            text-align: center;
+            position: fixed;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+        }
     </style>
 </head>
 <body>
+    <div class="small-header">▄︻デ══‐一♡</div>
+    
     <button id="play-pause-btn">⏸️</button>
     <img id="home-button" src="images/home.gif" alt="Home" onclick="goToLinksPage()">
 
@@ -38,6 +56,9 @@
     <div id="level-progress">
         <div id="level-progress-bar"></div>
     </div>
+
+    <div class="disclaimer">▄︻デ══‐一♡ on unicorn.meme market is not associated with any coin launched on PumpFun. There is no PumpFun token being issued by ▄︻デ══‐一♡</div>
+
 
 <script>
     const backgroundMusic = document.getElementById('background-music');
