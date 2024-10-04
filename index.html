@@ -37,7 +37,7 @@
     </style>
 </head>
 <body>
-    <div class="small-header">▄︻デ══‐一♡</div>
+    <div id="small-header" class="small-header">▄︻デ══‐一♡</div>
     
     <button id="play-pause-btn">⏸️</button>
     <img id="home-button" src="images/home.gif" alt="Home" onclick="goToLinksPage()">
@@ -57,14 +57,15 @@
         <div id="level-progress-bar"></div>
     </div>
 
-    <div class="disclaimer">▄︻デ══‐一♡ on unicorn.meme market is not associated with any coin launched on PumpFun. There is no PumpFun token being issued by ▄︻デ══‐一♡</div>
-
+    <div id="disclaimer" class="disclaimer">▄︻デ══‐一♡ on unicorn.meme market is not associated with any coin launched on PumpFun. There is no PumpFun token being issued by ▄︻デ══‐一♡</div>
 
 <script>
     const backgroundMusic = document.getElementById('background-music');
     const playPauseBtn = document.getElementById('play-pause-btn');
     const playNextLevelBtn = document.getElementById("play-next-level-btn");
     const intermissionVideo = document.getElementById('intermission-video');
+    const smallHeader = document.getElementById('small-header');
+    const disclaimer = document.getElementById('disclaimer');
     let emojiIntervals = [];
     let level = 1;
     let baseSpeed = 1;
@@ -75,7 +76,7 @@
 
     const emojis = ['😹', '🌽', '🤡', '🍊', '💉🧬', '🇹🇼', '🐶🔫', '🎀', '🌎☮️', '🦍🍌', '🥩', '🐸', '🔥', '🎲', '🙂⛓️', '🇺🇸', '🥨', '🔨', '🍆', '🍣', '🪲🧃', '🧠🤏 ', '🐡', '💸', '🐷', '🐤', '🌕', '🪨', '✂️', '📄', '✉️', '🦐', '🇨🇳', ' जीत', '🥧', '🌮', '💩', '👽', '🍉', '🍑', '🚀', '💀'];
 
-function loadBackgroundOptions() {
+    function loadBackgroundOptions() {
     const backgrounds = [
         { name: 'Default (Pink)', url: '' },
         { name: '🤍', url: 'images/bg1.png' },
@@ -174,10 +175,12 @@ function loadBackgroundOptions() {
     }
 
     function startGame() {
-        const selectedBackground = document.getElementById('background-select').value;
         document.getElementById('start-game-page').style.display = 'none';
+        smallHeader.style.display = 'none';
+        disclaimer.style.display = 'none';
         backgroundMusic.currentTime = 0;
         backgroundMusic.play();
+        const selectedBackground = document.getElementById('background-select').value;
         updateBackground(selectedBackground);
         initializeGame();
     }
@@ -393,7 +396,7 @@ function createFallingEmoji() {
         }, 2000);
     });
 
-    function restartGame() {
+   function restartGame() {
         console.log("Restart game function called");
         document.getElementById('restart-button').style.display = 'none';
         hideNotification();
@@ -401,7 +404,9 @@ function createFallingEmoji() {
         level = 1;
         baseSpeed = 1;
         levelScores = [];
-        initializeGame();
+        smallHeader.style.display = 'block';
+        disclaimer.style.display = 'block';
+        document.getElementById('start-game-page').style.display = 'flex';
     }
 
     function goToLinksPage() {
