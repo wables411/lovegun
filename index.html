@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Love Gun</title>
-    <meta http-equiv="Content-Security-Policy" content="img-src 'self' data:; default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; media-src 'self'">
+    <meta http-equiv="Content-Security-Policy" content="img-src 'self' data:; default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; connect-src 'self' https://www.google-analytics.com; media-src 'self'">
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <style>
@@ -35,6 +35,15 @@
             background-color: rgba(255, 255, 255, 0.8);
         }
     </style>
+    
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-9846PR9QGF"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-9846PR9QGF');
+    </script>
 </head>
 <body>
     <div id="small-header" class="small-header">▄︻デ══‐一♡</div>
@@ -58,7 +67,6 @@
     </div>
 
     <div id="disclaimer" class="disclaimer">▄︻デ══‐一♡ on unicorn.meme market is not associated with any coin launched on PumpFun. There is no PumpFun token being issued by ▄︻デ══‐一♡</div>
-
 <script>
     const backgroundMusic = document.getElementById('background-music');
     const playPauseBtn = document.getElementById('play-pause-btn');
@@ -147,7 +155,6 @@
             timerElement.textContent = `Time: ${minutes}:${seconds.toString().padStart(2, '0')}`;
         }
     }
-
     function showNotification(message) {
         const notification = document.getElementById('notification');
         const nextLevelBtn = document.getElementById('play-next-level-btn');
@@ -211,7 +218,6 @@
                 document.body.appendChild(element);
             }
         });
-
         const gun = document.createElement('div');
         gun.className = 'gun';
         gun.textContent = '▄︻デ══‐一';
@@ -228,7 +234,8 @@
         document.getElementById('play-next-level-btn').style.display = 'none';
         document.getElementById('restart-button').style.display = 'none';
     }
-function createFallingEmoji() {
+
+    function createFallingEmoji() {
         const gameArea = document.getElementById('game');
         const emoji = document.createElement('div');
         emoji.classList.add('falling-emoji');
@@ -274,7 +281,6 @@ function createFallingEmoji() {
 
         gameTimer = setTimeout(stopGame, 150000);
     }
-
     function shootEmoji(event) {
         const emoji = document.elementFromPoint(event.clientX, event.clientY);
         const gameArea = document.getElementById('game');
@@ -299,7 +305,6 @@ function createFallingEmoji() {
             }, 1000);
         }
     }
-
     function moveGun(event) {
         const gun = document.querySelector('.gun');
         if (gun) {
@@ -372,7 +377,6 @@ function createFallingEmoji() {
 
         baseSpeed *= 1.2;
     }
-
     playPauseBtn.addEventListener('click', function() {
         if (backgroundMusic.paused) {
             backgroundMusic.play();
