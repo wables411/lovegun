@@ -24,16 +24,20 @@
             margin-top: 20px;
         }
         .disclaimer {
-            font-size: 20px;
-            text-align: center;
-            position: fixed;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-            padding: 10px;
-            background-color: rgba(255, 255, 255, 0.8);
-        }
+    font-size: 20px;
+    text-align: center;
+    position: fixed;
+    bottom: 0;           /* Changed from 10px to 0 to stick to bottom */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    padding: 30px 10px;  /* Increased top/bottom padding to 30px */
+    min-height: 100px;   /* Added minimum height */
+    background-color: rgba(255, 255, 255, 0.9); /* Made background slightly more opaque */
+    display: flex;       /* Added flex display */
+    align-items: center; /* Center content vertically */
+    justify-content: center; /* Center content horizontally */
+       }
     </style>
     
     <!-- Google tag (gtag.js) -->
