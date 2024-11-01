@@ -25,33 +25,34 @@
         }
 .disclaimer {
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    font-size: 30px;
+    font-size: 50px;
     text-align: center;
     position: fixed;
-    bottom: 0;            /* Keep at bottom */
+    bottom: 0;
     left: 0;
     transform: none;
     width: 100%;
-    height: 20vh;        /* Keep 20% viewport height */
+    height: 20vh;
     min-height: unset;
     max-width: 100%;
     background-color: rgba(255, 255, 255, 0.95);
     display: flex;
+    flex-direction: column;  /* Added this to stack the lines vertically */
     align-items: center;
     justify-content: center;
-    line-height: 1.5;
+    line-height: 1.2;      /* Adjusted line height for better spacing */
     box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
     border-radius: 0;
-    z-index: 998;        /* Lowered z-index further to ensure it's below other elements */
-    padding: 20px;       /* Reduced padding */
-    margin-bottom: 0;    /* Removed bottom margin */
+    z-index: 998;
+    padding: 20px;
+    margin-bottom: 0;
 }
 
-/* Optional: Add word-wrap if text gets too long */
-.disclaimer span {
-    word-wrap: break-word;
-    max-width: 90%;
+/* Add this to style the individual lines */
+.disclaimer div {
+    margin: 5px 0;  /* Add some vertical spacing between lines */
 }
+
     </style>
     
     <!-- Google tag (gtag.js) -->
