@@ -76,7 +76,7 @@ button:hover {
     width: 40px;
     height: 40px;
     cursor: url('crosshair.png') 16 16, auto;
-    z-index: 1000;
+    z-index: 2000; /* Ensure it's above other elements */
     border-radius: 50%;
     overflow: hidden;
     padding: 0;
