@@ -88,8 +88,10 @@
     let emojiFallInterval;
     const GAME_DURATION = 140; // 2 minutes and 20 seconds
     const MAX_LEVELS = 10;
+    let totalScore = 0;
 
-    const emojis = ['😹', '🌽', '🤡', '🍊', 'χ𝐃', '🍊', '🥥🐕', '👑', '💜🎉', '💉🧬', '🇹🇼', '🐶🔫', '🎀', '🌎☮️', '💜', '🦍🍌', '🥩', '🐸', '🔥', '🎲', '🙂⛓️', '🇺🇸', '🥨', '🔨', '🍆', '🍣', '🪲🧃', '🧠🤏 ', '🐡', '💸', '🐷', '🐤', '🌕', '🪨', '✂️', '📄', '✉️', '🦐', '🇨🇳', ' जीत', '🥧', '🌮', '💩', '👽', '🍉', '🍑', '🚀', '💀'];
+    const emojis = ['😹', '🌽', '🤡', 'χ𝐃', '🍊', '🥥🐕', '👑', '💜🎉', '💉🧬', '🇹🇼', '🐶🔫', '🎀', '🌎☮️', '💜', '🦍🍌', '🥩', '🐸', '🔥', '🎲', '🙂⛓️', '🇺🇸', '🥨', '🔨', '🍆', '🍣', '🪲🧃', '🧠🤏 ', '🐡', '💸', '🐷', '🐤', '🌕', '🪨', '✂️', '📄', '✉️', '🦐', '🇨🇳', ' जीत', '🥧', '🌮', '💩', '👽', '🍉', '🍑', '🚀', '💀'];
+    let availableEmojis = [...emojis];
 
     function loadBackgroundOptions() {
         const backgrounds = [
@@ -131,37 +133,39 @@
     }
 
     function resetGame() {
-        level = 1;
-        score = 0;
-        updateScoreDisplay();
-        updateLevelDisplay();
-        clearAllEmojis();
+    level = 1;
+    score = 0;
+    totalScore = 0;
+    availableEmojis = [...emojis]; // Reset available emojis
+    updateScoreDisplay();
+    updateLevelDisplay();
+    clearAllEmojis();
     }
 
     function startLevel() {
-        gameActive = true;
-        score = 0;
-        updateScoreDisplay();
-        
-        // Reset and start music
-        backgroundMusic.currentTime = 0;
-        backgroundMusic.play();
-        
-        // Start emoji spawning with level-appropriate speed
-        startFallingEmojis();
-        
-        // Start game timer
-        let timeLeft = GAME_DURATION;
+    gameActive = true;
+    score = 0; // Only reset level score
+    updateScoreDisplay();
+    
+    // Reset and start music
+    backgroundMusic.currentTime = 0;
+    backgroundMusic.play();
+    
+    // Start emoji spawning with level-appropriate speed
+    startFallingEmojis();
+    
+    // Start game timer
+    let timeLeft = GAME_DURATION;
+    updateTimerDisplay(timeLeft);
+    
+    gameTimer = setInterval(() => {
+        timeLeft--;
         updateTimerDisplay(timeLeft);
         
-        gameTimer = setInterval(() => {
-            timeLeft--;
-            updateTimerDisplay(timeLeft);
-            
-            if (timeLeft <= 0) {
-                endLevel();
-            }
-        }, 1000);
+        if (timeLeft <= 0) {
+            endLevel();
+        }
+    }, 1000);
     }
 
     function startFallingEmojis() {
@@ -176,16 +180,27 @@
     }
 
     function spawnEmoji() {
-        const emoji = document.createElement('div');
-        emoji.className = 'falling-emoji';
-        emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-        emoji.style.left = `${Math.random() * (window.innerWidth - 50)}px`;
-        emoji.style.top = '-50px';
-        
-        const fallSpeed = 5000 * (1 - (level - 1) * 0.1); // 10% faster each level
-        emoji.style.animation = `fall ${fallSpeed}ms linear`;
-        
-        gameContainer.appendChild(emoji);
+    // Refill and shuffle if we're out of emojis
+    if (availableEmojis.length === 0) {
+        availableEmojis = [...emojis];
+        // Fisher-Yates shuffle
+        for (let i = availableEmojis.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [availableEmojis[i], availableEmojis[j]] = [availableEmojis[j], availableEmojis[i]];
+        }
+    }
+    
+    // Take the next emoji from our shuffled array
+    const emoji = document.createElement('div');
+    emoji.className = 'falling-emoji';
+    emoji.textContent = availableEmojis.pop(); // Remove and use last emoji from array
+    emoji.style.left = `${Math.random() * (window.innerWidth - 50)}px`;
+    emoji.style.top = '-50px';
+    
+    const fallSpeed = 5000 * (1 - (level - 1) * 0.1); // 10% faster each level
+    emoji.style.animation = `fall ${fallSpeed}ms linear`;
+    
+    gameContainer.appendChild(emoji);
         
         emoji.addEventListener('click', () => {
             if (gameActive) {
@@ -214,20 +229,21 @@
     }
 
     function endLevel() {
-        gameActive = false;
-        clearInterval(gameTimer);
-        clearInterval(emojiFallInterval);
-        clearAllEmojis();
-        
-        showNotification(`Level ${level} complete! You shot ${score} emojis!`);
-        
-        if (level < MAX_LEVELS) {
-            playNextLevelBtn.style.display = 'block';
-        } else {
-            showNotification(`Game Complete! Final Score: ${score}`);
-            document.getElementById('restart-button').style.display = 'block';
-        }
+    gameActive = false;
+    clearInterval(gameTimer);
+    clearInterval(emojiFallInterval);
+    clearAllEmojis();
+    
+    totalScore += score; // Add level score to total score
+    
+    if (level < MAX_LEVELS) {
+        showNotification(`omg wow! ur love gunned down ${totalScore} memoji's UwU!`);
+        playNextLevelBtn.style.display = 'block';
+    } else {
+        showNotification(`omg wow! ur love gunned down ${totalScore} memoji's UwU!\nGame Complete! 💕`);
+        document.getElementById('restart-button').style.display = 'block';
     }
+}
 
     function clearAllEmojis() {
         const emojis = document.querySelectorAll('.falling-emoji');
