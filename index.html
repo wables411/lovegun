@@ -1,6 +1,3 @@
-Sure! Below is your HTML file with everything related to the disclaimer removed:
-
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -172,14 +169,19 @@ Sure! Below is your HTML file with everything related to the disclaimer removed:
     }
 
     function startGame() {
-        document.getElementById('start-game-page').style.display = 'none';
+    document.getElementById('start-game-page').style.display = 'none';
+
+    // Ensure smallHeader is available before attempting to hide it
+    if (smallHeader) {
         smallHeader.style.display = 'none';
-        backgroundMusic.currentTime = 0;
-        backgroundMusic.play();
-        const selectedBackground = document.getElementById('background-select').value;
-        updateBackground(selectedBackground);
-        initializeGame();
     }
+    
+    backgroundMusic.currentTime = 0;
+    backgroundMusic.play();
+    const selectedBackground = document.getElementById('background-select').value;
+    updateBackground(selectedBackground);
+    initializeGame();
+}
 
     function initializeGame() {
         setupGameElements();
