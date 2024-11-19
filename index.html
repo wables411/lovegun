@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Love Gun</title>
-    <meta http-equiv="Content-Security-Policy" content="img-src 'self' data:; default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; connect-src 'self' https://www.google-analytics.com; media-src 'self'">
+    <meta http-equiv="Content-Security-Policy" content="img-src 'self' data: https://raw.githubusercontent.com; default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; connect-src 'self' https://www.google-analytics.com; media-src 'self'">
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <style>
@@ -93,23 +93,33 @@
     const emojis = ['😹', '🌽', '🤡', 'χ𝐃', '🍊', '🥥🐕', '👑', '💜🎉', '💉🧬', '🇹🇼', '🐶🔫', '🎀', '🌎☮️', '💜', '🦍🍌', '🥩', '🐸', '🔥', '🎲', '🙂⛓️', '🇺🇸', '🥨', '🔨', '🍆', '🍣', '🪲🧃', '🧠🤏 ', '🐡', '💸', '🐷', '🐤', '🌕', '🪨', '✂️', '📄', '✉️', '🦐', '🇨🇳', ' जीत', '🥧', '🌮', '💩', '👽', '🍉', '🍑', '🚀', '💀'];
     let availableEmojis = [...emojis];
 
+    function updateBackground(imageUrl) {
+        if (imageUrl) {
+            document.body.style.backgroundImage = `url('${imageUrl}')`;
+            document.body.style.backgroundColor = 'transparent';
+        } else {
+            document.body.style.backgroundImage = 'none';
+            document.body.style.backgroundColor = '#ff69b4';
+        }
+    }
+
     function loadBackgroundOptions() {
         const backgrounds = [
-    { name: 'Default (Pink)', url: '' },
-    { name: '🤍', url: 'https://raw.githubusercontent.com/wables411/lovegun/main/images/bg1.png' },
-    { name: 'L', url: 'https://raw.githubusercontent.com/wables411/lovegun/main/images/bg2.png' },
-    { name: 'O', url: 'https://raw.githubusercontent.com/wables411/lovegun/main/images/bg3.png' },
-    { name: 'V', url: 'https://raw.githubusercontent.com/wables411/lovegun/main/images/bg4.png' },
-    { name: 'E', url: 'https://raw.githubusercontent.com/wables411/lovegun/main/images/bg5.png' },
-    { name: '🤍', url: 'https://raw.githubusercontent.com/wables411/lovegun/main/images/bg6.png' },
-    { name: 'G', url: 'https://raw.githubusercontent.com/wables411/lovegun/main/images/bg7.png' },
-    { name: 'U', url: 'https://raw.githubusercontent.com/wables411/lovegun/main/images/bg8.png' },
-    { name: 'N', url: 'https://raw.githubusercontent.com/wables411/lovegun/main/images/bg9.png' },
-    { name: '🤍', url: 'https://raw.githubusercontent.com/wables411/lovegun/main/images/bg10.png' },
-    { name: 'Pew Pew', url: 'https://raw.githubusercontent.com/wables411/lovegun/main/images/loveguns.gif' },
-    { name: 'Matrix UwU', url: 'https://raw.githubusercontent.com/wables411/lovegun/main/images/lovegunmatrix.gif' },
-    { name: 'Do Not Click This UwU', url: 'https://raw.githubusercontent.com/wables411/lovegun/main/images/epilepsyuwu.gif' }
-];
+            { name: 'Default (Pink)', url: '' },
+            { name: '🤍', url: 'https://raw.githubusercontent.com/wables411/lovegun/main/images/bg1.png' },
+            { name: 'L', url: 'https://raw.githubusercontent.com/wables411/lovegun/main/images/bg2.png' },
+            { name: 'O', url: 'https://raw.githubusercontent.com/wables411/lovegun/main/images/bg3.png' },
+            { name: 'V', url: 'https://raw.githubusercontent.com/wables411/lovegun/main/images/bg4.png' },
+            { name: 'E', url: 'https://raw.githubusercontent.com/wables411/lovegun/main/images/bg5.png' },
+            { name: '🤍', url: 'https://raw.githubusercontent.com/wables411/lovegun/main/images/bg6.png' },
+            { name: 'G', url: 'https://raw.githubusercontent.com/wables411/lovegun/main/images/bg7.png' },
+            { name: 'U', url: 'https://raw.githubusercontent.com/wables411/lovegun/main/images/bg8.png' },
+            { name: 'N', url: 'https://raw.githubusercontent.com/wables411/lovegun/main/images/bg9.png' },
+            { name: '🤍', url: 'https://raw.githubusercontent.com/wables411/lovegun/main/images/bg10.png' },
+            { name: 'Pew Pew', url: 'https://raw.githubusercontent.com/wables411/lovegun/main/images/loveguns.gif' },
+            { name: 'Matrix UwU', url: 'https://raw.githubusercontent.com/wables411/lovegun/main/images/lovegunmatrix.gif' },
+            { name: 'Do Not Click This UwU', url: 'https://raw.githubusercontent.com/wables411/lovegun/main/images/epilepsyuwu.gif' }
+        ];
 
         const selectBackground = document.getElementById('background-select');
         backgrounds.forEach(bg => {
@@ -117,6 +127,10 @@
             option.value = bg.url;
             option.textContent = bg.name;
             selectBackground.appendChild(option);
+        });
+
+        selectBackground.addEventListener('change', function() {
+            updateBackground(this.value);
         });
     }
 
@@ -133,39 +147,39 @@
     }
 
     function resetGame() {
-    level = 1;
-    score = 0;
-    totalScore = 0;
-    availableEmojis = [...emojis]; // Reset available emojis
-    updateScoreDisplay();
-    updateLevelDisplay();
-    clearAllEmojis();
+        level = 1;
+        score = 0;
+        totalScore = 0;
+        availableEmojis = [...emojis]; // Reset available emojis
+        updateScoreDisplay();
+        updateLevelDisplay();
+        clearAllEmojis();
     }
 
     function startLevel() {
-    gameActive = true;
-    score = 0; // Only reset level score
-    updateScoreDisplay();
-    
-    // Reset and start music
-    backgroundMusic.currentTime = 0;
-    backgroundMusic.play();
-    
-    // Start emoji spawning with level-appropriate speed
-    startFallingEmojis();
-    
-    // Start game timer
-    let timeLeft = GAME_DURATION;
-    updateTimerDisplay(timeLeft);
-    
-    gameTimer = setInterval(() => {
-        timeLeft--;
+        gameActive = true;
+        score = 0; // Only reset level score
+        updateScoreDisplay();
+        
+        // Reset and start music
+        backgroundMusic.currentTime = 0;
+        backgroundMusic.play();
+        
+        // Start emoji spawning with level-appropriate speed
+        startFallingEmojis();
+        
+        // Start game timer
+        let timeLeft = GAME_DURATION;
         updateTimerDisplay(timeLeft);
         
-        if (timeLeft <= 0) {
-            endLevel();
-        }
-    }, 1000);
+        gameTimer = setInterval(() => {
+            timeLeft--;
+            updateTimerDisplay(timeLeft);
+            
+            if (timeLeft <= 0) {
+                endLevel();
+            }
+        }, 1000);
     }
 
     function startFallingEmojis() {
@@ -180,27 +194,27 @@
     }
 
     function spawnEmoji() {
-    // Refill and shuffle if we're out of emojis
-    if (availableEmojis.length === 0) {
-        availableEmojis = [...emojis];
-        // Fisher-Yates shuffle
-        for (let i = availableEmojis.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [availableEmojis[i], availableEmojis[j]] = [availableEmojis[j], availableEmojis[i]];
+        // Refill and shuffle if we're out of emojis
+        if (availableEmojis.length === 0) {
+            availableEmojis = [...emojis];
+            // Fisher-Yates shuffle
+            for (let i = availableEmojis.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [availableEmojis[i], availableEmojis[j]] = [availableEmojis[j], availableEmojis[i]];
+            }
         }
-    }
-    
-    // Take the next emoji from our shuffled array
-    const emoji = document.createElement('div');
-    emoji.className = 'falling-emoji';
-    emoji.textContent = availableEmojis.pop(); // Remove and use last emoji from array
-    emoji.style.left = `${Math.random() * (window.innerWidth - 50)}px`;
-    emoji.style.top = '-50px';
-    
-    const fallSpeed = 5000 * (1 - (level - 1) * 0.1); // 10% faster each level
-    emoji.style.animation = `fall ${fallSpeed}ms linear`;
-    
-    gameContainer.appendChild(emoji);
+        
+        // Take the next emoji from our shuffled array
+        const emoji = document.createElement('div');
+        emoji.className = 'falling-emoji';
+        emoji.textContent = availableEmojis.pop(); // Remove and use last emoji from array
+        emoji.style.left = `${Math.random() * (window.innerWidth - 50)}px`;
+        emoji.style.top = '-50px';
+        
+        const fallSpeed = 5000 * (1 - (level - 1) * 0.1); // 10% faster each level
+        emoji.style.animation = `fall ${fallSpeed}ms linear`;
+        
+        gameContainer.appendChild(emoji);
         
         emoji.addEventListener('click', () => {
             if (gameActive) {
@@ -229,21 +243,21 @@
     }
 
     function endLevel() {
-    gameActive = false;
-    clearInterval(gameTimer);
-    clearInterval(emojiFallInterval);
-    clearAllEmojis();
-    
-    totalScore += score; // Add level score to total score
-    
-    if (level < MAX_LEVELS) {
-        showNotification(`omg wow! ur love gunned down ${totalScore} memoji's UwU!`);
-        playNextLevelBtn.style.display = 'block';
-    } else {
-        showNotification(`omg wow! ur love gunned down ${totalScore} memoji's UwU!\nGame Complete! 💕`);
-        document.getElementById('restart-button').style.display = 'block';
+        gameActive = false;
+        clearInterval(gameTimer);
+        clearInterval(emojiFallInterval);
+        clearAllEmojis();
+        
+        totalScore += score; // Add level score to total score
+        
+        if (level < MAX_LEVELS) {
+            showNotification(`omg wow! ur love gunned down ${totalScore} memoji's UwU!`);
+            playNextLevelBtn.style.display = 'block';
+        } else {
+            showNotification(`omg wow! ur love gunned down ${totalScore} memoji's UwU!\nGame Complete! 💕`);
+            document.getElementById('restart-button').style.display = 'block';
+        }
     }
-}
 
     function clearAllEmojis() {
         const emojis = document.querySelectorAll('.falling-emoji');
@@ -269,6 +283,11 @@
         const notification = document.getElementById('notification');
         notification.textContent = message;
         notification.style.display = 'block';
+        notification.style.top = '40%';  // Position above the next level button
+        
+        // Center the notification
+        const notificationHeight = notification.offsetHeight;
+        notification.style.marginTop = `-${notificationHeight/2}px`;
     }
 
     playNextLevelBtn.addEventListener('click', () => {
