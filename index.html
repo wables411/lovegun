@@ -222,34 +222,36 @@
     }
 
     function startFallingEmojis() {
-        const maxEmojis = 100;
-        let fallenEmojis = 0;
-        let levelDuration = 30 * level;
-        let timeLeft = levelDuration;
-        const levelDurationInMs = levelDuration * 1000;
-        timerInterval = setInterval(function() {
-            timeLeft--;
-            updateTimerDisplay(timeLeft);
-            if (timeLeft <= 0) {
-                clearInterval(timerInterval);
-                levelScores.push(totalScore);
-                showNotification("Level complete! 🎉");
-                playNextLevelBtn.style.display = 'block';
-            }
-        }, 1000);
+    const maxEmojis = 100;
+    let fallenEmojis = 0;
+    let levelDuration = 30 * level; // Example: Each level lasts 30 seconds * level number
+    let timeLeft = levelDuration;
+    const levelDurationInMs = levelDuration * 1000;
+    timerInterval = setInterval(function() {
+        timeLeft--;
+        updateTimerDisplay(timeLeft);
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            levelScores.push(totalScore);
+            showNotification("Level complete! 🎉");
+            playNextLevelBtn.style.display = 'block';
+        }
+    }, 1000);
 
-        gameTimer = setInterval(() => {
-            if (fallenEmojis >= maxEmojis) {
-                clearInterval(gameTimer);
-                levelScores.push(totalScore);
-                showNotification("Level complete! 🎉");
-                playNextLevelBtn.style.display = 'block';
-            } else {
-                spawnRandomEmoji();
-                fallenEmojis++;
-            }
-        }, 500 / baseSpeed);
-    }
+    baseSpeed = 1 + (level - 1) * 0.1; // Increase speed by 10% each level
+
+    gameTimer = setInterval(() => {
+        if (fallenEmojis >= maxEmojis) {
+            clearInterval(gameTimer);
+            levelScores.push(totalScore);
+            showNotification("Level complete! 🎉");
+            playNextLevelBtn.style.display = 'block';
+        } else {
+            spawnRandomEmoji();
+            fallenEmojis++;
+        }
+    }, 500 / baseSpeed); // Adjust the speed of falling emojis based on level
+}
 
     function spawnRandomEmoji() {
         const emoji = document.createElement('div');
